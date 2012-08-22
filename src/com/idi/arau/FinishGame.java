@@ -26,21 +26,26 @@ public class FinishGame extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				toast();				
-				
-				
-				
+				playAgain();								
 			}
 		});
 	}
 
-	private void toast() {
-		Toast t = Toast.makeText(this, "press", Toast.LENGTH_SHORT);
-		t.show();
-		ImageView v = new ImageView(this);
-		setContentView(v);
-		Drawable d = this.getResources().getDrawable(R.drawable.apple);
-		v.setImageDrawable(d);
+
+	protected void playAgain() {
+		//
 	}
+
+	
+	
+	
+//	private void toast() {
+//		Toast t = Toast.makeText(this, "press", Toast.LENGTH_SHORT);
+//		t.show();
+//		ImageView v = new ImageView(this);
+//		setContentView(v);
+//		Drawable d = this.getResources().getDrawable(R.drawable.apple);
+//		v.setImageDrawable(d);
+//	}
 
 }

@@ -20,8 +20,8 @@ public class WordsDataSource {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
+	public void open() throws SQLException {		
+		database = dbHelper.getReadableDatabase();
 	}
 
 	public void close() {
@@ -37,7 +37,7 @@ public class WordsDataSource {
 		Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS, allColumns,
 				DatabaseHelper.COLUMN_ID + " = " + insertId, null, null, null,
 				null);	
-		int modifyedRows = cursor.getCount();
+		int modifyedRows = cursor.getCount();		
 		cursor.close();
 		return modifyedRows;
 	}

@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,7 +34,7 @@ public class ViewGame extends SurfaceView {
 	public ViewGame(Context context) {
 		super(context);
 		this.context = context;
-		this.manager = ManagerGame.getInstanceManager(this);
+		this.manager = ManagerGame.getInstanceManager(context);
 		if (!manager.isLast()) {
 			obtainNextWord();
 			doSurfaceJob();
@@ -315,5 +314,5 @@ public class ViewGame extends SurfaceView {
 	private void gameOver() {
 		Toast toast = Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT);
 		toast.show();
-	}
+	}	
 }

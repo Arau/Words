@@ -1,25 +1,26 @@
 package com.idi.arau;
 
-import android.util.Log;
+import android.content.Context;
+
 
 public class ManagerGame {
-
-	private ViewGame viewGame;
+	
 	private static ManagerGame managerObject;
+	private Context context;
 	private Word[] words;
 	private int[] bmps;
 	private int i;	
 
-	private ManagerGame(ViewGame view) {
-		this.viewGame = view;
+	private ManagerGame(Context context) {		
+		this.context = context;		
 		i = 0;			
 		defineWords();
 		
 	}
 
-	public static ManagerGame getInstanceManager(ViewGame view) {
+	public static ManagerGame getInstanceManager(Context context) {
 		if (managerObject == null) {
-			managerObject = new ManagerGame(view);
+			managerObject = new ManagerGame(context);
 		}
 		return managerObject;
 	}	
@@ -40,18 +41,22 @@ public class ManagerGame {
 		return false;
 	}
 	
-	private void defineWords(){
-		Word w1 = new Word("t");		
-		Word w2 = new Word("b");				
-		Word w5 = new Word("c");
-		words = new Word[]{w1,w2,w5};
+	private void defineWords(){		
+		DomainController controller = new DomainController(context);
+		String[] stringWords =  controller.getWordsToPlay();
 		
-		int b1 = R.drawable.apple;
-		int b2 = R.drawable.orange;
-		int b3 = R.drawable.pineapple;
-		bmps = new int[]{b1,b2,b3};
+		initWords(stringWords.length);
 		
-		
-		
+		int i = 0;
+		for (String stringWord : stringWords){
+			Word word = new Word(stringWord);
+			words[i] = word;			
+			++i;
+		}
+		bmps = controller.getResourcesToPlay();		
+	}
+
+	private void initWords(int length) {
+		words = new Word[length];
 	}
 }

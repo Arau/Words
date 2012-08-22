@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class Words extends Activity {
@@ -52,17 +51,21 @@ public class Words extends Activity {
 		data.open();
 		
 		
-		ModelWord m = new ModelWord("word",R.drawable.apple);		
-		ModelWord w = new ModelWord("paraula",R.drawable.cinc);
+		ModelWord m = new ModelWord("apple",R.drawable.apple);		
+		ModelWord w = new ModelWord("orange",R.drawable.orange);
+		ModelWord z = new ModelWord("pineapple",R.drawable.pineapple);
+		ModelWord x = new ModelWord("zero",R.drawable.zero);		
 		data.addWord(m);
 		data.addWord(w);
+		data.addWord(z);
+		data.addWord(x);
 		
 		
 		List<ModelWord> words = data.readAllWords();
 		Toast t = new Toast(this);
 		String text = "";
 		for(ModelWord word: words){
-			text = text + " " + word.getWord() + " "+ word.getResource() + " ||| ";
+			text = text + " " + word.getWord() + " "+ word.getResource() + " ";
 		}		
 		EditText txt = (EditText) findViewById(R.id.editText1);
 		txt.setText(text);
