@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World!</string>
     <string name="app_name">Words</string>
+    <string name="dataBaseName">wordsDB.db</string>
 
 </resources>
