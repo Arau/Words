@@ -20,7 +20,7 @@ public class WordsDataSource {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public void open() throws SQLException {		
+	public void open() throws SQLException {
 		database = dbHelper.getReadableDatabase();
 	}
 
@@ -36,23 +36,28 @@ public class WordsDataSource {
 				values);
 		Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS, allColumns,
 				DatabaseHelper.COLUMN_ID + " = " + insertId, null, null, null,
-				null);	
-		int modifyedRows = cursor.getCount();		
+				null);
+		int modifyedRows = cursor.getCount();
 		cursor.close();
 		return modifyedRows;
 	}
 
 	public List<ModelWord> readAllWords() {
 		List<ModelWord> words = new ArrayList<ModelWord>();
-		Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS, allColumns,
-				null, null, null, null, null);
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			ModelWord word = cursorToModelWord(cursor);
-			words.add(word);
-			cursor.moveToNext();
+		try {
+
+			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
+					allColumns, null, null, null, null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				ModelWord word = cursorToModelWord(cursor);
+				words.add(word);
+				cursor.moveToNext();
+			}
+			cursor.close();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		cursor.close();
 		return words;
 	}
 

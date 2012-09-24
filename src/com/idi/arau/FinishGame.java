@@ -1,13 +1,11 @@
 package com.idi.arau;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class FinishGame extends Activity {
@@ -33,7 +31,9 @@ public class FinishGame extends Activity {
 
 
 	protected void playAgain() {
-		//
+		Intent firstScreen = new Intent(this, Words.class);
+        firstScreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(firstScreen);
 	}
 
 	

@@ -14,8 +14,7 @@ public class ManagerGame {
 	private ManagerGame(Context context) {		
 		this.context = context;		
 		i = 0;			
-		defineWords();
-		
+		defineWords();	
 	}
 
 	public static ManagerGame getInstanceManager(Context context) {

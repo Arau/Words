@@ -60,11 +60,10 @@ public class Words extends Activity {
 			ModelWord m = new ModelWord("apple", R.drawable.apple);
 			ModelWord w = new ModelWord("orange", R.drawable.orange);
 			ModelWord z = new ModelWord("pineapple", R.drawable.pineapple);
-			ModelWord x = new ModelWord("zero", R.drawable.zero);
+			
 			data.addWord(m);
 			data.addWord(w);
 			data.addWord(z);
-			data.addWord(x);
 
 			data.close();
 		}

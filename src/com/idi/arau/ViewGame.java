@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -47,17 +48,6 @@ public class ViewGame extends SurfaceView {
 		this.word = manager.getNextWord();
 		int resource = manager.getNextPicture();
 		this.picture = BitmapFactory.decodeResource(getResources(), resource);
-		//this.picture = redimensionarImagenMaximo(this.picture, 100,100);		
-	}
-
-	private Bitmap resizePicture() {
-		int width = this.picture.getWidth();
-		int height = this.picture.getHeight();
-		float scaleWidth = ((float) 100) / width;
-		float scaleHeight = ((float) 100) / height;
-		Matrix matrix = new Matrix();
-		matrix.postScale(scaleWidth, scaleHeight);
-		return Bitmap.createBitmap(this.picture, 0, 0, width, height, matrix, false);		 
 	}
 
 	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
@@ -66,8 +56,8 @@ public class ViewGame extends SurfaceView {
 		int height = mBitmap.getHeight();
 		float scaleWidth = ((float) newWidth) / width;
 		float scaleHeight = ((float) newHeigth) / height;
-		Matrix matrix = new Matrix();		
-		matrix.postScale(scaleWidth, scaleHeight);		
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
 		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
@@ -110,10 +100,24 @@ public class ViewGame extends SurfaceView {
 		context.startActivity(i);
 	}
 
+	private Bitmap resizePicture() {
+		int width = this.picture.getWidth();
+		int height = this.picture.getHeight();
+		float scaleWidth = ((float) this.getWidth() / 3) / width;
+		float scaleHeight = ((float) this.getWidth() / 3) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(this.picture, 0, 0, width, height, matrix,
+				false);
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
-		canvas.drawBitmap(this.picture, 50, 50, null);
+
+		int sizeX = this.getWidth() / 4;
+		int sizeY = this.getHeight() / 4;
+		canvas.drawBitmap(this.picture, sizeX, sizeY, null);
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);
 		word.drawTouchedLetters(canvas, touchedString, this.getWidth(),
@@ -143,7 +147,10 @@ public class ViewGame extends SurfaceView {
 				if (!correct)
 					gameOver();
 				else if (touchedLetters.size() == word.getString().length())
-					restart();
+					synchronized (getHolder()) {
+						restart();
+					}
+
 				break;
 			}
 		}
@@ -153,11 +160,11 @@ public class ViewGame extends SurfaceView {
 		this.word = new Word(stringWord);
 	}
 
-	private void restart() {
-		ViewGame v = new ViewGame(context);
-		ViewGroup parent = (ViewGroup) this.getParent();
-		parent.addView(v);
+	private void restart() {		
+		ViewGroup parent = (ViewGroup) this.getParent();		
 		parent.removeView(this);
+		ViewGame v = new ViewGame(context);
+		parent.addView(v);		
 	}
 
 	private void defineDrawablesWord() {
@@ -314,5 +321,5 @@ public class ViewGame extends SurfaceView {
 	private void gameOver() {
 		Toast toast = Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT);
 		toast.show();
-	}	
+	}
 }
