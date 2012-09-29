@@ -91,4 +91,10 @@ public class Words extends Activity {
 		Intent i = new Intent(this, Game.class);
 		startActivity(i);
 	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		this.finishActivity(0);
+	}	
 }

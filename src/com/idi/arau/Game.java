@@ -3,51 +3,59 @@ package com.idi.arau;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-public class Game extends Activity {
+public class Game extends Activity  implements OnClickListener {
 
 	private TimeThread timeThread;
-	static final int DIALOG_GAMEOVER_ID = 1;
+	private static final int DIALOG_GAMEOVER_ID = 1;
+	private static final int TIME_X_WORD = 10;
 	Dialog gameOverDialog = null;
+
+	Button playAgain;
+	Button goStart;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		LinearLayout layout = new LinearLayout(this);
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
-
-		// LayoutInflater inflater = getLayoutInflater();
-		// ProgressBar timeBar = (ProgressBar )
-		// inflater.inflate(R.layout.time_bar_def, null);
-
-		ProgressBar timeBar = new ProgressBar(this, null,
-				android.R.attr.progressBarStyleHorizontal);
+		LinearLayout layout = defineLayout();
+		ProgressBar timeBar = defineProgressTimeBar();
 
 		layout.addView(timeBar);
 		layout.addView(new ViewGame(this));
 		setContentView(layout);
 
-		// Time
-		timeThread = new TimeThread(this, timeBar, 50);
+		timeInit(timeBar);
 
-		timeThread.setRunning(true);
-		timeThread.start();
 	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
+	private LinearLayout defineLayout() {
+		LinearLayout layout = new LinearLayout(this);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT));
+		return layout;
+	}
 
+	private ProgressBar defineProgressTimeBar() {
+		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;
+		ProgressBar timeBar = new ProgressBar(this, null, progressBarStyle);
+		return timeBar;
+	}
+
+	private void timeInit(ProgressBar timeBar) {
+		timeThread = new TimeThread(this, timeBar, TIME_X_WORD);
+		timeThread.setRunning(true);
+		timeThread.start();
 	}
 
 	public void onTimeOut() {
@@ -63,16 +71,43 @@ public class Game extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = new Dialog(this);
-		
-		switch(id) {
-		case DIALOG_GAMEOVER_ID:
-			gameOver();
 
+		switch (id) {
+		case DIALOG_GAMEOVER_ID:
+			dialog.setContentView(R.layout.game_over_dialog);
+			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
+			playAgain.setOnClickListener(this);
+			Button goStart = (Button) dialog.findViewById(R.id.goStart);
+			goStart.setOnClickListener(this);
+			gameOverDialog = dialog;
+			break;
+
+		default:
+			dialog = null;
 		}
 		return dialog;
 	}
-	private void gameOver() {
-		Toast toast = Toast.makeText(this, "Game Over", Toast.LENGTH_SHORT);
-		toast.show();
+
+
+	protected void playAgain() {
+		Log.v("mmm", "adasdas");
+	}
+
+	protected void goToStart() {
+		finish();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.playAgain:
+			gameOverDialog.dismiss();
+			gameOverDialog = null;	
+			playAgain();
+			break;
+		case R.id.goStart:
+			goToStart();
+			break;		
+		}		
 	}
 }
