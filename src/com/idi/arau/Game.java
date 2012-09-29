@@ -47,8 +47,12 @@ public class Game extends Activity  implements OnClickListener {
 	}
 
 	private ProgressBar defineProgressTimeBar() {
-		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;
+		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;		
 		ProgressBar timeBar = new ProgressBar(this, null, progressBarStyle);
+		timeBar.setProgressDrawable(getResources().getDrawable(R.drawable.time_bar_def));
+		
+	
+		
 		return timeBar;
 	}
 
