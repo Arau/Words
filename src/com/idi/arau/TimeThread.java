@@ -6,6 +6,7 @@ public class TimeThread extends Thread {
 
 	private boolean running = false;
 	ProgressBar timeBar;
+	Boolean timeOut;
 	int currentValue;
 	Game main;
 
@@ -13,6 +14,7 @@ public class TimeThread extends Thread {
 		this.timeBar = timeBar;
 		main = activity;
 		currentValue = maxValue;
+		timeOut = false;
 		timeBar.setMax(maxValue);
 		timeBar.setProgress(currentValue);
 	}
@@ -29,6 +31,9 @@ public class TimeThread extends Thread {
 		return currentValue;
 	}
 
+	public Boolean isTimeOut() {
+		return this.timeOut;
+	}
 	public void resetTime(int maxValue) {
 		timeBar.setMax(maxValue);
 		currentValue = maxValue;
@@ -45,6 +50,7 @@ public class TimeThread extends Thread {
 			timeBar.setProgress(currentValue);
 			if (currentValue == 0) {
 				running = false;
+				timeOut = true;		
 				main.onTimeOut();
 			}
 			sleepTime = ticksPS - (System.currentTimeMillis() - startTime);
@@ -55,6 +61,6 @@ public class TimeThread extends Thread {
 					sleep(10);
 			} catch (Exception e) {
 			}
-		}
+		}		
 	}
 }
