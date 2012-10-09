@@ -11,6 +11,7 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 
@@ -49,17 +50,22 @@ public class Game extends Activity implements OnClickListener {
 		setContentView(layout);
 		view.setTimeThread(timeThread, TIME_X_WORD);
 		
-		layout.setOnLongClickListener(new OnLongClickListener() {
+		view.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
 			public boolean onLongClick(View v) {
-				stop();
-				return false;
+				toast();
+				//stop();
+				return true;
 			}
 		});
 
 	}
 	
+	protected void toast() {
+		Toast.makeText(this, "long click", Toast.LENGTH_LONG).show();
+		
+	}
 	// DIALOG
 	@Override
 	protected Dialog onCreateDialog(int id) {
