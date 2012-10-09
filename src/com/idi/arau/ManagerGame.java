@@ -62,4 +62,12 @@ public class ManagerGame {
 	public void restartIndex() {
 		this.i = 0;
 	}
+
+	public int getIndex() {
+		return i;
+	}
+
+	public void setIndex(int index) {
+		this.i = index;
+	}
 }

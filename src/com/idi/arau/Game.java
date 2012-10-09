@@ -27,6 +27,10 @@ public class Game extends Activity implements OnClickListener {
 	Button playAgain;
 	Button goStart;
 
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/////	EVENTS
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,24 +47,50 @@ public class Game extends Activity implements OnClickListener {
 		layout.addView(view);
 		timeInit(timeBar);
 		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);		
+		view.setTimeThread(timeThread, TIME_X_WORD);
+		
+		layout.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				stop();
+				return false;
+			}
+		});
+
 	}
 	
-	private LinearLayout defineLayout() {
-		LinearLayout layout = new LinearLayout(this);
-		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
-		return layout;
+	// DIALOG
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog = new Dialog(this);
+
+		switch (id) {
+		case DIALOG_GAMEOVER_ID:
+			dialog.setContentView(R.layout.game_over_dialog);
+			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
+			playAgain.setOnClickListener(this);
+			Button goStart = (Button) dialog.findViewById(R.id.goStart);
+			dialog.setCancelable(false);
+			goStart.setOnClickListener(this);
+			gameOverDialog = dialog;
+			break;
+
+		default:
+			dialog = null;
+		}
+		return dialog;
+	}	
+
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {	
+		super.onSaveInstanceState(outState);
+		
 	}
 
-	private ProgressBar defineProgressTimeBar() {
-		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;
-		ProgressBar timeBar = new ProgressBar(this, null, progressBarStyle);
-		timeBar.setProgressDrawable(getResources().getDrawable(
-				R.drawable.time_bar_def));
-		return timeBar;
-	}
+	///////////////////////////////////////////////////////////////////////////////
+	/////	PUBLIC
 
 	public void timeInit(ProgressBar timeBar) {
 		timeThread = new TimeThread(this, timeBar, TIME_X_WORD);
@@ -72,56 +102,25 @@ public class Game extends Activity implements OnClickListener {
 		if (timeThread.isTimeOut()) {
 			this.runOnUiThread(showGameOverDialog);
 		}
-
 	}
 
-	private Runnable showGameOverDialog = new Runnable() {
-		public void run() {
-			showDialog(DIALOG_GAMEOVER_ID);
-		}
-	};
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = new Dialog(this);
-
-		switch (id) {
-		case DIALOG_GAMEOVER_ID:
-			dialog.setContentView(R.layout.game_over_dialog);
-			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
-			playAgain.setOnClickListener(this);
-			Button goStart = (Button) dialog.findViewById(R.id.goStart);
-			goStart.setOnClickListener(this);
-			gameOverDialog = dialog;
-			break;
-
-		default:
-			dialog = null;
-		}
-		return dialog;
-	}
-
-	protected void playAgain() {
-		Intent i = new Intent(this, Game.class);
-		startActivity(i);
-	}
-
-	protected void goToStart() {
-		finish();
-	}
-
+	
+	// IMPLEMENT onClick Dialog buttons 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.playAgain:
-			gameOverDialog.dismiss();
-			gameOverDialog = null;
+			dismiss(gameOverDialog);
 			playAgain();
 			break;
 		case R.id.goStart:
+			dismiss(gameOverDialog);
 			goToStart();
 			break;
+		default:
+			finish();
 		}
+		
 	}
 
 	public void restartTime() {
@@ -132,19 +131,8 @@ public class Game extends Activity implements OnClickListener {
 		timeThread.setRunning(false);
 		timeThread.interrupt();		
 	}
-
-	private void resetViewFromActivity() {
-		layout.removeView(view);
-		view = new ViewGame(this, viewToGame);
-		layout.addView(view);
-		
-		killTimeThread();
-		restartTime();
-		
-		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);
-	}		
 	
+	// INTERFACE IMPLEMENTATION
 	ViewToGame viewToGame = new ViewToGame() {
 
 		@Override
@@ -162,4 +150,63 @@ public class Game extends Activity implements OnClickListener {
 			resetViewFromActivity();
 		}		
 	};
+
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/////	PRIVATE
+
+	
+	private LinearLayout defineLayout() {
+		LinearLayout layout = new LinearLayout(this);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT));
+		return layout;
+	}
+
+	private ProgressBar defineProgressTimeBar() {
+		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;
+		ProgressBar timeBar = new ProgressBar(this, null, progressBarStyle);
+		timeBar.setProgressDrawable(getResources().getDrawable(
+				R.drawable.time_bar_def));
+		return timeBar;
+	}
+	
+
+	private Runnable showGameOverDialog = new Runnable() {
+		public void run() {
+			showDialog(DIALOG_GAMEOVER_ID);
+		}
+	};
+	
+	protected void playAgain() {
+		Intent i = new Intent(this, Game.class);
+		startActivity(i);
+	}
+
+	protected void goToStart() {
+		finish();
+	}
+	
+	protected void stop() {
+		int wordIndex = manager.getIndex();
+		// estem aqui per guardar el state
+	}
+
+	private void resetViewFromActivity() {
+		layout.removeView(view);
+		view = new ViewGame(this, viewToGame);
+		layout.addView(view);
+		
+		killTimeThread();
+		restartTime();
+		
+		setContentView(layout);
+		view.setTimeThread(timeThread, TIME_X_WORD);
+	}		
+	
+	private void dismiss(Dialog dialog) {
+		dialog.dismiss();
+		dialog = null;
+	}
 }

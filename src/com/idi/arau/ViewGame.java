@@ -35,6 +35,11 @@ public class ViewGame extends SurfaceView {
 	private int maxTimeValue;
 	private  ViewToGame viewToGame;
 
+	
+
+	///////////////////////////////////////////////////////////////////////////////
+	/////	PUBLIC
+	
 	public ViewGame(Context context, ViewToGame v) {
 		super(context);
 		this.viewToGame = v;
@@ -48,12 +53,6 @@ public class ViewGame extends SurfaceView {
 		}
 	}
 
-	private void obtainNextWord() {
-		this.word = manager.getNextWord();
-		int resource = manager.getNextPicture();
-		this.picture = BitmapFactory.decodeResource(getResources(), resource);
-	}
-
 	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
 			float newHeigth) {
 		int width = mBitmap.getWidth();
@@ -65,7 +64,38 @@ public class ViewGame extends SurfaceView {
 		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
-	private void doSurfaceJob() {
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		if (System.currentTimeMillis() - lastClick > 300) {
+			lastClick = System.currentTimeMillis();
+			synchronized (getHolder()) {
+				letterTouched(event);
+			}
+		}
+		return true;
+	}
+	
+	public void setWord(String stringWord) {
+		this.word = new Word(stringWord);
+	}
+
+
+
+	public void setTimeThread(TimeThread timeThread, int maxValue) {
+		this.timeThread = timeThread;		
+		this.maxTimeValue = maxValue;
+	}
+	
+
+	public void setGameRunning(boolean run) {
+		gameLoopThread.setRunning(run);		
+	}	
+
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/////	PRIVATE		
+
+		private void doSurfaceJob() {
 		gameLoopThread = new GameLoopThread(this);
 		holder = getHolder();
 		holder.addCallback(playSurfaceCallback);
@@ -102,16 +132,6 @@ public class ViewGame extends SurfaceView {
 
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (System.currentTimeMillis() - lastClick > 300) {
-			lastClick = System.currentTimeMillis();
-			synchronized (getHolder()) {
-				letterTouched(event);
-			}
-		}
-		return true;
-	}
 
 	private void letterTouched(MotionEvent event) {
 		for (int i = drawablesWord.size() - 1; i >= 0; i--) {
@@ -133,10 +153,7 @@ public class ViewGame extends SurfaceView {
 		}
 	}
 
-	public void setWord(String stringWord) {
-		this.word = new Word(stringWord);
-	}
-
+	
 	private void startNextWord() {
 //		ViewGroup parent = (ViewGroup) this.getParent();
 //		ViewGame v = new ViewGame(context, viewToGame);
@@ -149,10 +166,10 @@ public class ViewGame extends SurfaceView {
 		viewToGame.resetView();
 	}
 
-
-	public void setTimeThread(TimeThread timeThread, int maxValue) {
-		this.timeThread = timeThread;		
-		this.maxTimeValue = maxValue;
+	private void obtainNextWord() {
+		this.word = manager.getNextWord();
+		int resource = manager.getNextPicture();
+		this.picture = BitmapFactory.decodeResource(getResources(), resource);
 	}
 	
 	private void restartTimeThread() {
@@ -316,10 +333,6 @@ public class ViewGame extends SurfaceView {
 		toast.show();
 	}
 
-
-	public void setGameRunning(boolean run) {
-		gameLoopThread.setRunning(run);		
-	}	
 
 	
 	SurfaceHolder.Callback playSurfaceCallback =  new SurfaceHolder.Callback() {
