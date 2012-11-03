@@ -32,18 +32,19 @@ public class ViewGame extends SurfaceView {
 	private long lastClick = 0;
 	private TimeThread timeThread;
 	private int maxTimeValue;
-	private  ViewToGame viewToGame;
 
+	private ViewToGame viewToGame;
+	private boolean isPaused;
 
-
-	///////////////////////////////////////////////////////////////////////////////
-	/////	PUBLIC
+	// /////////////////////////////////////////////////////////////////////////////
+	// /// PUBLIC
 
 	public ViewGame(Context context, ViewToGame v) {
 		super(context);
 		this.viewToGame = v;
 		this.context = context;
 		this.manager = ManagerGame.getInstanceManager(context);
+		isPaused = false;
 		if (!manager.isLast()) {
 			obtainNextWord();
 			doSurfaceJob();
@@ -68,11 +69,17 @@ public class ViewGame extends SurfaceView {
 		if (System.currentTimeMillis() - lastClick > 300) {
 			lastClick = System.currentTimeMillis();
 			synchronized (getHolder()) {
-				if (event.getEventTime()-event.getDownTime() > 1800){ // LongClick as 1,2 sec's
-					pause();
-				}	
+				if (isPaused) {
+					playThreads();
+				} else {
+					if (event.getEventTime() - event.getDownTime() > 1800) { // LongClick
+																				// as
+																				// 1,8
+																				// sec's
+						pauseThreads();
+					}
+				}
 				letterTouched(event);
-
 			}
 		}
 		return true;
@@ -82,21 +89,24 @@ public class ViewGame extends SurfaceView {
 		this.word = new Word(stringWord);
 	}
 
-
-
 	public void setTimeThread(TimeThread timeThread, int maxValue) {
-		this.timeThread = timeThread;		
+		this.timeThread = timeThread;
 		this.maxTimeValue = maxValue;
 	}
 
-
 	public void setGameRunning(boolean run) {
-		gameLoopThread.setRunning(run);		
-	}	
+		gameLoopThread.setRunning(run);
+	}
 
+	public void killGameThread() {
+		if (gameLoopThread != null) {
+			gameLoopThread.setRunning(false);
+			gameLoopThread.interrupt();
+		}
+	}
 
-	///////////////////////////////////////////////////////////////////////////////
-	/////	PRIVATE		
+	// /////////////////////////////////////////////////////////////////////////////
+	// /// PRIVATE
 
 	private void doSurfaceJob() {
 		gameLoopThread = new GameLoopThread(this);
@@ -105,9 +115,8 @@ public class ViewGame extends SurfaceView {
 	}
 
 	private void finishGame() {
-		viewToGame.killOldThread();
-		Intent i = new Intent(this.context, FinishGame.class);
-		context.startActivity(i);
+		pauseThreads();
+		viewToGame.finishGame();
 	}
 
 	private Bitmap resizePicture() {
@@ -135,7 +144,6 @@ public class ViewGame extends SurfaceView {
 
 	}
 
-
 	private void letterTouched(MotionEvent event) {
 		for (int i = drawablesWord.size() - 1; i >= 0; i--) {
 			Letter letter = drawablesWord.get(i);
@@ -143,7 +151,7 @@ public class ViewGame extends SurfaceView {
 				touchedLetters.add(letter);
 				drawablesWord.remove(letter);
 				Boolean correct = word
-				.checkWord(letterArrayToString(touchedLetters));
+						.checkWord(letterArrayToString(touchedLetters));
 				if (!correct)
 					gameOver();
 				else if (touchedLetters.size() == word.getString().length())
@@ -154,25 +162,42 @@ public class ViewGame extends SurfaceView {
 				break;
 			}
 		}
-	}	
-
-
-
+	}
 
 	private void startNextWord() {
-		//		ViewGroup parent = (ViewGroup) this.getParent();
-		//		ViewGame v = new ViewGame(context, viewToGame);
-		//		parent.addView(v);
-		//		restartTimeThread();
-		//		
-		//		parent.removeView(this);	
-		//		
+		// ViewGroup parent = (ViewGroup) this.getParent();
+		// ViewGame v = new ViewGame(context, viewToGame);
+		// parent.addView(v);
+		// restartTimeThread();
+		//
+		// parent.removeView(this);
+		//
 
 		viewToGame.resetView();
 	}
 
-	private void pause() {
-		// 
+	private void pauseThreads() {
+		isPaused = true;
+		viewToGame.killOldThread();
+		if (gameLoopThread != null) {
+			killGameThread();
+		}
+		// cal fer un play i dir-li a manager la paraula on som.
+	}
+
+
+	private void playThreads() {
+		if (isPaused) {
+			viewToGame.restartTime();
+			restartGameLoopThread();
+			isPaused = false;
+		}
+	}
+
+	private void restartGameLoopThread() {
+		gameLoopThread = new GameLoopThread(this);
+		gameLoopThread.setRunning(true);
+		gameLoopThread.start();
 	}
 
 	private void obtainNextWord() {
@@ -338,13 +363,11 @@ public class ViewGame extends SurfaceView {
 	}
 
 	private void gameOver() {
-		Toast toast = Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT);
-		toast.show();
+		pauseThreads();
+		viewToGame.gameOver();
 	}
 
-
-
-	SurfaceHolder.Callback playSurfaceCallback =  new SurfaceHolder.Callback() {
+	SurfaceHolder.Callback playSurfaceCallback = new SurfaceHolder.Callback() {
 
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
@@ -369,8 +392,8 @@ public class ViewGame extends SurfaceView {
 		}
 
 		@Override
-		public void surfaceChanged(SurfaceHolder holder, int format,
-				int width, int height) {
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
 		}
 	};
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World!</string>
+   
     <string name="app_name">Words</string>
     <string name="dataBaseName">wordsDB.db</string>
-    <string name="gameOver">Game Over! </string>
+    <string name="gameOver">Game Over </string>
     <string name="playAgain">Play Again </string>
     <string name="goStart">Go to Start </string>
+    <string name="finishGame"> Finish Game </string>   
 
 </resources>

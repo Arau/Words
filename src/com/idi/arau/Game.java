@@ -11,16 +11,18 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
 	private TimeThread timeThread;
 	private static final int DIALOG_GAMEOVER_ID = 1;
+	private static final int DIALOG_FINISH_GAME = 2;
 	private static final int TIME_X_WORD = 20;
 	private Dialog gameOverDialog = null;
+	private Dialog finishDialog = null;
 	private ProgressBar timeBar;
 	private ManagerGame manager;
 	private LinearLayout layout;
@@ -35,37 +37,12 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		layout = defineLayout();
-		this.timeBar = defineProgressTimeBar();
-
+		requestWindowFeature(Window.FEATURE_NO_TITLE);		
 		this.manager = ManagerGame.getInstanceManager(this);
 		manager.restartIndex();
-
-		layout.addView(timeBar);
-		view = new ViewGame(this, viewToGame);
-		layout.addView(view);
-		timeInit(timeBar);
-		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);
-		
-		view.setOnLongClickListener(new OnLongClickListener() {
-			
-			@Override
-			public boolean onLongClick(View v) {
-				toast();
-				//stop();
-				return true;
-			}
-		});
-
 	}
 	
-	protected void toast() {
-		Toast.makeText(this, "long click", Toast.LENGTH_LONG).show();
-		
-	}
+	
 	// DIALOG
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -81,7 +58,15 @@ public class Game extends Activity implements OnClickListener {
 			goStart.setOnClickListener(this);
 			gameOverDialog = dialog;
 			break;
-
+		case DIALOG_FINISH_GAME:
+			dialog.setContentView(R.layout.finish_game_dialog);
+			Button playAgn = (Button) dialog.findViewById(R.id.playAgn);
+			playAgn.setOnClickListener(this);
+			Button goStrt = (Button) dialog.findViewById(R.id.goStrt);
+			dialog.setCancelable(false);
+			goStrt.setOnClickListener(this);
+			finishDialog = dialog;
+			break;
 		default:
 			dialog = null;
 		}
@@ -91,10 +76,31 @@ public class Game extends Activity implements OnClickListener {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {	
-		super.onSaveInstanceState(outState);
-		
+		super.onSaveInstanceState(outState);		
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();		
+		killTimeThread();
+		view.killGameThread();
+		view = null;
+	};
+	
+	@Override
+	protected void onResume() {	
+		super.onResume();
+		layout = defineLayout();
+		this.timeBar = defineProgressTimeBar();
+		layout.addView(timeBar);
+		view = new ViewGame(this, viewToGame);
+		layout.addView(view);
+		timeInit(timeBar);
+		setContentView(layout);
+		view.setTimeThread(timeThread, TIME_X_WORD);			
+		
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////
 	/////	PUBLIC
 
@@ -123,10 +129,17 @@ public class Game extends Activity implements OnClickListener {
 			dismiss(gameOverDialog);
 			goToStart();
 			break;
+		case R.id.playAgn:
+			dismiss(finishDialog);
+			playAgain();
+			break;
+		case R.id.goStrt:
+			dismiss(finishDialog);
+			goToStart();
+			break;
 		default:
 			finish();
-		}
-		
+		}		
 	}
 
 	public void restartTime() {
@@ -155,6 +168,16 @@ public class Game extends Activity implements OnClickListener {
 		public void resetView() {
 			resetViewFromActivity();
 		}		
+		
+		@Override
+		public void finishGame() {
+			showFinishDialog();
+		}
+		
+		@Override
+		public void gameOver() {
+			showGameOverDialog();
+		}
 	};
 
 	
@@ -185,12 +208,28 @@ public class Game extends Activity implements OnClickListener {
 		}
 	};
 	
+	private Runnable showFinishDialog = new Runnable () {
+		public void run() {			
+			showDialog(DIALOG_FINISH_GAME);
+		}		
+	};
+	
+	private void showFinishDialog() {
+		this.runOnUiThread(showFinishDialog);
+	}
+	
+	private void showGameOverDialog() {
+		this.runOnUiThread(showGameOverDialog);
+	}
+	
 	protected void playAgain() {
 		Intent i = new Intent(this, Game.class);
 		startActivity(i);
 	}
 
 	protected void goToStart() {
+		killTimeThread();
+		view.killGameThread();
 		finish();
 	}
 	
