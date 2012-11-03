@@ -4,11 +4,14 @@ import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -60,7 +63,7 @@ public class Words extends Activity {
 			ModelWord m = new ModelWord("apple", R.drawable.apple);
 			ModelWord w = new ModelWord("orange", R.drawable.orange);
 			ModelWord z = new ModelWord("pineapple", R.drawable.pineapple);
-			
+
 			data.addWord(m);
 			data.addWord(w);
 			data.addWord(z);
@@ -91,10 +94,36 @@ public class Words extends Activity {
 		Intent i = new Intent(this, Game.class);
 		startActivity(i);
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		this.finishActivity(0);
-	}	
+	}
+
+	private boolean mIsBound = false;
+	private MusicService mServ;
+	private ServiceConnection Scon = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			mServ = ((MusicService.ServiceBinder) binder).getService();
+		}
+
+		public void onServiceDisconnected(ComponentName name) {
+			mServ = null;
+		}
+	};
+
+	void doBindService() {
+		bindService(new Intent(this, MusicService.class), Scon,
+				Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+	}
+
+	void doUnbindService() {
+		if (mIsBound) {
+			unbindService(Scon);
+			mIsBound = false;
+		}
+	}
 }
