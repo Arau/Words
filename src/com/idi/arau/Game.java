@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
@@ -51,6 +54,45 @@ public class Game extends Activity implements OnClickListener {
 		manager.restartIndex();
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		killTimeThread();
+		view.killGameThread();
+		view = null;
+		stopMusic();
+	};
+
+	@Override
+	protected void onResume() {
+		super.onResume();	
+
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		toggleMusic();
+
+		fixWordIndex();
+		
+		layout = defineLayout();
+		this.timeBar = defineProgressTimeBar();
+		layout.addView(timeBar);
+		view = new ViewGame(this, viewToGame);
+		layout.addView(view);
+		setContentView(layout);
+		timeInit(timeBar);
+		view.setTimeThread(timeThread, TIME_X_WORD);
+
+		String s = "musica: " + pref.getBoolean("music", true);
+		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		// timeThread.setRunning(false);
+		return true;
+	}
+
 	// DIALOG
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -77,7 +119,7 @@ public class Game extends Activity implements OnClickListener {
 			break;
 		case DIALOG_HELP:
 			break;
-		
+
 		default:
 			dialog = null;
 		}
@@ -85,40 +127,17 @@ public class Game extends Activity implements OnClickListener {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	protected void onSaveInstanceState(Bundle savedInstance) {
+		super.onSaveInstanceState(savedInstance);
+		int wordIndex = this.manager.getIndex();
+		savedInstance.putInt("wordIndex", wordIndex);
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		killTimeThread();
-		view.killGameThread();
-		view = null;
-	};
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		pref = getSharedPreferences("com.arau.asteroides_preferences",
-				MODE_PRIVATE);
-		layout = defineLayout();
-		this.timeBar = defineProgressTimeBar();
-		layout.addView(timeBar);
-		view = new ViewGame(this, viewToGame);
-		layout.addView(view);
-		timeInit(timeBar);
-		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);
-
-	}
-
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
-		// timeThread.setRunning(false);
-		return true;
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		int wordIndex = savedInstanceState.getInt("wordIndex");
+		this.manager.setIndex(wordIndex);
 	}
 
 	@Override
@@ -131,6 +150,7 @@ public class Game extends Activity implements OnClickListener {
 			finish();
 			return true;
 		case R.id.toggle_music:
+			startStopMusic();
 			toggleMusic();
 			break;
 		case R.id.help:
@@ -138,7 +158,7 @@ public class Game extends Activity implements OnClickListener {
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	// IMPLEMENT onClick Dialog buttons
 	@Override
@@ -263,13 +283,13 @@ public class Game extends Activity implements OnClickListener {
 	};
 
 	private Runnable showHelpDialog = new Runnable() {
-		
+
 		@Override
 		public void run() {
-			showDialog(DIALOG_HELP);			
+			showDialog(DIALOG_HELP);
 		}
 	};
-	
+
 	private void showFinishDialog() {
 		this.runOnUiThread(showFinishDialog);
 	}
@@ -281,7 +301,7 @@ public class Game extends Activity implements OnClickListener {
 	private void onHelp() {
 		this.runOnUiThread(showHelpDialog);
 	}
-	
+
 	protected void playAgain() {
 		Intent i = new Intent(this, Game.class);
 		startActivity(i);
@@ -291,11 +311,6 @@ public class Game extends Activity implements OnClickListener {
 		killTimeThread();
 		view.killGameThread();
 		finish();
-	}
-
-	protected void stop() {
-		int wordIndex = manager.getIndex();
-		// estem aqui per guardar el state
 	}
 
 	private void resetViewFromActivity() {
@@ -315,13 +330,42 @@ public class Game extends Activity implements OnClickListener {
 		dialog = null;
 	}
 
-	private void startMusic() {
-		mp = MediaPlayer.create(this, R.raw.gang);
-		mp.setLooping(true);
-		mp.start();
+	private boolean musicShouldBeOn() {
+		if (pref.getBoolean("music", true))
+			Log.v("tes", "true");
+		else
+			Log.v("tes", "false");
+
+		return pref.getBoolean("music", false);
+
 	}
 
-	private boolean musicShouldBeOn() {
-		return pref.getBoolean("music", true);
+	private void stopMusic() {
+		if (mp != null)
+			mp.pause();
+	}
+
+	private void startStopMusic() {
+		SharedPreferences.Editor editor = pref.edit();
+		if (mp != null) {
+			if (mp.isPlaying())
+				// mp.pause();
+				editor.putBoolean("music", false);
+			else
+				// mp.start();
+				editor.putBoolean("music", true);
+		} else {
+			mp = MediaPlayer.create(this, R.raw.gang);
+			mp.setLooping(true);
+			editor.putBoolean("music", true);
+			// mp.start();
+		}
+		editor.commit();
+	}
+
+	private void fixWordIndex() {
+		int wordIndex = manager.getIndex();
+		if (wordIndex > 0)
+			this.manager.setIndex(wordIndex - 1);
 	}
 }

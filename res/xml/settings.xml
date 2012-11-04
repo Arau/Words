@@ -5,7 +5,10 @@
     <CheckBoxPreference 
         android:key="music"
         android:title="Play music"
-        android:summary="Background music"  />
+        android:summary="Background music"  
+        android:defaultValue="true"
+        
+        />
     
     <CheckBoxPreference 
         android:key="answer"
