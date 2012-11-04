@@ -3,46 +3,54 @@ package com.idi.arau;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
 	private TimeThread timeThread;
+	private ManagerGame manager;
+
 	private static final int DIALOG_GAMEOVER_ID = 1;
 	private static final int DIALOG_FINISH_GAME = 2;
+	private static final int DIALOG_HELP = 3;
 	private static final int TIME_X_WORD = 20;
+
 	private Dialog gameOverDialog = null;
 	private Dialog finishDialog = null;
+
 	private ProgressBar timeBar;
-	private ManagerGame manager;
 	private LinearLayout layout;
+
 	private ViewGame view;
+	private MediaPlayer mp = null;
+	private SharedPreferences pref;
+
 	Button playAgain;
 	Button goStart;
 
-	
-	///////////////////////////////////////////////////////////////////////////////
-	/////	EVENTS
-	
+	// /////////////////////////////////////////////////////////////////////////////
+	// /// EVENTS
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.manager = ManagerGame.getInstanceManager(this);
 		manager.restartIndex();
 	}
-	
-	
+
 	// DIALOG
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -67,29 +75,33 @@ public class Game extends Activity implements OnClickListener {
 			goStrt.setOnClickListener(this);
 			finishDialog = dialog;
 			break;
+		case DIALOG_HELP:
+			break;
+		
 		default:
 			dialog = null;
 		}
 		return dialog;
-	}	
+	}
 
-	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {	
-		super.onSaveInstanceState(outState);		
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();		
+		super.onPause();
 		killTimeThread();
 		view.killGameThread();
 		view = null;
 	};
-	
+
 	@Override
-	protected void onResume() {	
+	protected void onResume() {
 		super.onResume();
+		pref = getSharedPreferences("com.arau.asteroides_preferences",
+				MODE_PRIVATE);
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
 		layout.addView(timeBar);
@@ -97,27 +109,38 @@ public class Game extends Activity implements OnClickListener {
 		layout.addView(view);
 		timeInit(timeBar);
 		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);			
-		
-	}
-	
-	///////////////////////////////////////////////////////////////////////////////
-	/////	PUBLIC
+		view.setTimeThread(timeThread, TIME_X_WORD);
 
-	public void timeInit(ProgressBar timeBar) {
-		timeThread = new TimeThread(this, timeBar, TIME_X_WORD);
-		timeThread.setRunning(true);
-		timeThread.start();
 	}
 
-	public void onTimeOut() {
-		if (timeThread.isTimeOut()) {
-			this.runOnUiThread(showGameOverDialog);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		// timeThread.setRunning(false);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.restart:
+			playAgain();
+			return true;
+		case R.id.main_menu:
+			finish();
+			return true;
+		case R.id.toggle_music:
+			toggleMusic();
+			break;
+		case R.id.help:
+			onHelp();
+			return true;
 		}
-	}
+		return false;
+	}	
 
-	
-	// IMPLEMENT onClick Dialog buttons 
+	// IMPLEMENT onClick Dialog buttons
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -139,7 +162,35 @@ public class Game extends Activity implements OnClickListener {
 			break;
 		default:
 			finish();
-		}		
+		}
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////
+	// /// PUBLIC
+
+	public void timeInit(ProgressBar timeBar) {
+		timeThread = new TimeThread(this, timeBar, TIME_X_WORD);
+		timeThread.setRunning(true);
+		timeThread.start();
+	}
+
+	public void onTimeOut() {
+		if (timeThread.isTimeOut()) {
+			this.runOnUiThread(showGameOverDialog);
+		}
+	}
+
+	public void toggleMusic() {
+		if (musicShouldBeOn()) {
+			if (mp == null) {
+				mp = MediaPlayer.create(this, R.raw.gang);
+				mp.setLooping(true);
+			}
+			mp.start();
+		} else {
+			if (mp != null)
+				mp.pause();
+		}
 	}
 
 	public void restartTime() {
@@ -148,9 +199,9 @@ public class Game extends Activity implements OnClickListener {
 
 	public void killTimeThread() {
 		timeThread.setRunning(false);
-		timeThread.interrupt();		
+		timeThread.interrupt();
 	}
-	
+
 	// INTERFACE IMPLEMENTATION
 	ViewToGame viewToGame = new ViewToGame() {
 
@@ -161,30 +212,28 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void killOldThread() {
-			killTimeThread();		
+			killTimeThread();
 		}
 
 		@Override
 		public void resetView() {
 			resetViewFromActivity();
-		}		
-		
+		}
+
 		@Override
 		public void finishGame() {
 			showFinishDialog();
 		}
-		
+
 		@Override
 		public void gameOver() {
 			showGameOverDialog();
 		}
 	};
 
-	
-	///////////////////////////////////////////////////////////////////////////////
-	/////	PRIVATE
+	// /////////////////////////////////////////////////////////////////////////////
+	// /// PRIVATE
 
-	
 	private LinearLayout defineLayout() {
 		LinearLayout layout = new LinearLayout(this);
 		layout.setOrientation(LinearLayout.VERTICAL);
@@ -200,26 +249,37 @@ public class Game extends Activity implements OnClickListener {
 				R.drawable.time_bar_def));
 		return timeBar;
 	}
-	
 
 	private Runnable showGameOverDialog = new Runnable() {
 		public void run() {
 			showDialog(DIALOG_GAMEOVER_ID);
 		}
 	};
-	
-	private Runnable showFinishDialog = new Runnable () {
-		public void run() {			
+
+	private Runnable showFinishDialog = new Runnable() {
+		public void run() {
 			showDialog(DIALOG_FINISH_GAME);
-		}		
+		}
+	};
+
+	private Runnable showHelpDialog = new Runnable() {
+		
+		@Override
+		public void run() {
+			showDialog(DIALOG_HELP);			
+		}
 	};
 	
 	private void showFinishDialog() {
 		this.runOnUiThread(showFinishDialog);
 	}
-	
+
 	private void showGameOverDialog() {
 		this.runOnUiThread(showGameOverDialog);
+	}
+
+	private void onHelp() {
+		this.runOnUiThread(showHelpDialog);
 	}
 	
 	protected void playAgain() {
@@ -232,7 +292,7 @@ public class Game extends Activity implements OnClickListener {
 		view.killGameThread();
 		finish();
 	}
-	
+
 	protected void stop() {
 		int wordIndex = manager.getIndex();
 		// estem aqui per guardar el state
@@ -242,16 +302,26 @@ public class Game extends Activity implements OnClickListener {
 		layout.removeView(view);
 		view = new ViewGame(this, viewToGame);
 		layout.addView(view);
-		
+
 		killTimeThread();
 		restartTime();
-		
+
 		setContentView(layout);
 		view.setTimeThread(timeThread, TIME_X_WORD);
-	}		
-	
+	}
+
 	private void dismiss(Dialog dialog) {
 		dialog.dismiss();
 		dialog = null;
+	}
+
+	private void startMusic() {
+		mp = MediaPlayer.create(this, R.raw.gang);
+		mp.setLooping(true);
+		mp.start();
+	}
+
+	private boolean musicShouldBeOn() {
+		return pref.getBoolean("music", true);
 	}
 }

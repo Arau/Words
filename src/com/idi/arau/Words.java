@@ -9,13 +9,16 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Words extends Activity {
 	private Button button;
@@ -25,7 +28,6 @@ public class Words extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		fillDataBase();
-
 		button = (Button) findViewById(R.id.button1);
 		button.setOnClickListener(new OnClickListener() {
 
@@ -34,12 +36,12 @@ public class Words extends Activity {
 			}
 		});
 
-		button = (Button) findViewById(R.id.button2);
+		button = (Button) findViewById(R.id.preferences);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-				finish();
+				goPreferences();
 			}
 		});
 
@@ -52,6 +54,30 @@ public class Words extends Activity {
 			}
 		});
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		this.finishActivity(0);
+	}
+
+	protected void goPreferences() {
+		Intent i = new Intent(this, Preferences.class);
+		startActivity(i);
+	}
+
+//	public void showPreferences() {
+//		SharedPreferences pref = getSharedPreferences(
+//				"com.arau.asteroides_preferences", MODE_PRIVATE);
+//		String s = "musica: " + pref.getBoolean("musica", true)
+//				+ ", gráficos: " + pref.getString("graficos", "?")
+//				+ ", fragmentos: " + pref.getString("fragmentos", "?")
+//				+ ", multijugador: " + pref.getBoolean("multijugador", true)
+//				+ ", numJugadors: " + pref.getString("numJugadores", "?")
+//				+ ", conexiones: " + pref.getString("conexiones", "?");
+//
+//		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+//	}
 
 	private void fillDataBase() {
 		Resources res = getResources();
@@ -93,37 +119,5 @@ public class Words extends Activity {
 	private void play() {
 		Intent i = new Intent(this, Game.class);
 		startActivity(i);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		this.finishActivity(0);
-	}
-
-	private boolean mIsBound = false;
-	private MusicService mServ;
-	private ServiceConnection Scon = new ServiceConnection() {
-
-		public void onServiceConnected(ComponentName name, IBinder binder) {
-			mServ = ((MusicService.ServiceBinder) binder).getService();
-		}
-
-		public void onServiceDisconnected(ComponentName name) {
-			mServ = null;
-		}
-	};
-
-	void doBindService() {
-		bindService(new Intent(this, MusicService.class), Scon,
-				Context.BIND_AUTO_CREATE);
-		mIsBound = true;
-	}
-
-	void doUnbindService() {
-		if (mIsBound) {
-			unbindService(Scon);
-			mIsBound = false;
-		}
-	}
+	}		
 }

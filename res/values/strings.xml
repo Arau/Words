@@ -8,5 +8,11 @@
     <string name="playAgain">Play Again </string>
     <string name="goStart">Go to Start </string>
     <string name="finishGame"> Finish Game </string>   
-
+    <string name="preferences"> Preferences </string>
+    <string name="help_label">Help</string>
+	<string name="restart_label">Restart</string>
+	<string name="main_menu_label">Main menu</string>
+	<string name="toggle_music">Toggle music</string>
+	<string name="level_label">Level: </string>
+    
 </resources>
