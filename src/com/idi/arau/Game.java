@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract.Helpers;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,8 +31,9 @@ public class Game extends Activity implements OnClickListener {
 	private static final int DIALOG_HELP = 3;
 	private static final int TIME_X_WORD = 20;
 
-	private Dialog gameOverDialog = null;
-	private Dialog finishDialog = null;
+	private Dialog gameOverDialog	= null;
+	private Dialog finishDialog 	= null;
+	private Dialog helpDialog 		= null;
 
 	private ProgressBar timeBar;
 	private LinearLayout layout;
@@ -118,6 +120,11 @@ public class Game extends Activity implements OnClickListener {
 			finishDialog = dialog;
 			break;
 		case DIALOG_HELP:
+			dialog.setContentView(R.layout.help_dialog);
+			Button exit = (Button) dialog.findViewById(R.id.exitHelp);
+			exit.setOnClickListener(this);			
+			dialog.setCancelable(false);			
+			helpDialog = dialog;			
 			break;
 
 		default:
@@ -179,6 +186,11 @@ public class Game extends Activity implements OnClickListener {
 		case R.id.goStrt:
 			dismiss(finishDialog);
 			goToStart();
+			break;
+		case R.id.exitHelp:
+//pause game
+			dismiss(helpDialog);
+//play game			
 			break;
 		default:
 			finish();

@@ -13,6 +13,7 @@
 	<string name="restart_label">Restart</string>
 	<string name="main_menu_label">Main menu</string>
 	<string name="toggle_music">Play/Pause music</string>
-	<string name="level_label">Level: </string>
+	<string name="help">Help</string>
+	<string name="exitHelp">Exit Help</string>
     
 </resources>

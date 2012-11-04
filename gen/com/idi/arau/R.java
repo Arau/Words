@@ -52,28 +52,32 @@ public final class R {
     }
     public static final class id {
         public static final int button1=0x7f090000;
-        public static final int button2=0x7f090008;
-        public static final int button3=0x7f090009;
+        public static final int button2=0x7f09000b;
+        public static final int button3=0x7f09000c;
         public static final int container=0x7f090004;
+        public static final int dialogHelp=0x7f090008;
         public static final int dialogTextFinishGame=0x7f090001;
         public static final int dialogTextGameOver=0x7f090005;
-        public static final int editText1=0x7f09000a;
+        public static final int editText1=0x7f09000d;
+        public static final int exitHelp=0x7f09000a;
         public static final int goStart=0x7f090007;
         public static final int goStrt=0x7f090003;
-        public static final int help=0x7f09000f;
-        public static final int main_menu=0x7f09000d;
+        public static final int help=0x7f090012;
+        public static final int helpText=0x7f090009;
+        public static final int main_menu=0x7f090010;
         public static final int playAgain=0x7f090006;
         public static final int playAgn=0x7f090002;
-        public static final int preferences=0x7f09000b;
-        public static final int restart=0x7f09000c;
-        public static final int toggle_music=0x7f09000e;
+        public static final int preferences=0x7f09000e;
+        public static final int restart=0x7f09000f;
+        public static final int toggle_music=0x7f090011;
     }
     public static final class layout {
         public static final int finish=0x7f030000;
         public static final int finish_game_dialog=0x7f030001;
         public static final int game=0x7f030002;
         public static final int game_over_dialog=0x7f030003;
-        public static final int main=0x7f030004;
+        public static final int help_dialog=0x7f030004;
+        public static final int main=0x7f030005;
     }
     public static final class menu {
         public static final int menu=0x7f080000;
@@ -84,11 +88,12 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f070000;
         public static final int dataBaseName=0x7f070001;
+        public static final int exitHelp=0x7f07000c;
         public static final int finishGame=0x7f070005;
         public static final int gameOver=0x7f070002;
         public static final int goStart=0x7f070004;
+        public static final int help=0x7f07000b;
         public static final int help_label=0x7f070007;
-        public static final int level_label=0x7f07000b;
         public static final int main_menu_label=0x7f070009;
         public static final int playAgain=0x7f070003;
         public static final int preferences=0x7f070006;
