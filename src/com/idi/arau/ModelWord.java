@@ -4,12 +4,14 @@ public class ModelWord {
 	private long id;
 	private String word;
 	private int resource;
+	private int level;
 	
 	public ModelWord(){}
 	
-	public ModelWord(String word, int res) {
+	public ModelWord(String word, int res, int level) {
 		this.word = word;
 		this.resource = res;
+		this.level = level;
 	}
 	
 	public long getId() {
@@ -35,4 +37,13 @@ public class ModelWord {
 	public void setResource(int resource) {
 		this.resource = resource;
 	}	
+
+	public int getLevel() {
+		return this.level;
+	}
+	
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
 }

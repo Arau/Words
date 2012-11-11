@@ -79,9 +79,9 @@ public class Words extends Activity {
 		if (!existDB) {
 			WordsDataSource data = new WordsDataSource(this);
 			data.open();
-			ModelWord m = new ModelWord("apple", R.drawable.apple);
-			ModelWord w = new ModelWord("orange", R.drawable.orange);
-			ModelWord z = new ModelWord("pineapple", R.drawable.pineapple);
+			ModelWord m = new ModelWord("apple", R.drawable.apple, 0);
+			ModelWord w = new ModelWord("orange", R.drawable.orange, 0);
+			ModelWord z = new ModelWord("pineapple", R.drawable.pineapple, 0);
 
 			data.addWord(m);
 			data.addWord(w);

@@ -14,7 +14,9 @@ public class WordsDataSource {
 	private SQLiteDatabase database;
 	private DatabaseHelper dbHelper;
 	private String[] allColumns = { DatabaseHelper.COLUMN_ID,
-			DatabaseHelper.COLUMN_WORD, DatabaseHelper.COLUMN_PICTURE };
+									DatabaseHelper.COLUMN_WORD, 
+									DatabaseHelper.COLUMN_PICTURE,
+									DatabaseHelper.COLUMN_LEVEL };
 
 	public WordsDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
