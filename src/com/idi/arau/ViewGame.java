@@ -5,17 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 public class ViewGame extends SurfaceView {
 	private Context context;
@@ -23,6 +20,7 @@ public class ViewGame extends SurfaceView {
 
 	private Word word;
 	private Bitmap picture;
+	private int level;
 	private ArrayList<Letter> alphabet;
 	private List<Letter> drawablesWord;
 	private List<Letter> touchedLetters = new ArrayList<Letter>();
@@ -39,11 +37,12 @@ public class ViewGame extends SurfaceView {
 	// /////////////////////////////////////////////////////////////////////////////
 	// /// PUBLIC
 
-	public ViewGame(Context context, ViewToGame v) {
+	public ViewGame(Context context, ViewToGame v, int level) {
 		super(context);
 		this.viewToGame = v;
 		this.context = context;
-		this.manager = ManagerGame.getInstanceManager(context);
+		this.level = level;
+		this.manager = ManagerGame.getInstanceManager(context, this.level);		
 		isPaused = false;
 		if (!manager.isLast()) {
 			obtainNextWord();
@@ -72,10 +71,7 @@ public class ViewGame extends SurfaceView {
 				if (isPaused) {
 					playThreads();
 				} else {
-					if (event.getEventTime() - event.getDownTime() > 1800) { // LongClick
-																				// as
-																				// 1,8
-																				// sec's
+					if (event.getEventTime() - event.getDownTime() > 1800) { // LongClick as 1,8 sec's 
 						pauseThreads();
 					}
 				}
@@ -184,7 +180,6 @@ public class ViewGame extends SurfaceView {
 		}
 		// cal fer un play i dir-li a manager la paraula on som.
 	}
-
 
 	private void playThreads() {
 		if (isPaused) {

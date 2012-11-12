@@ -36,8 +36,8 @@ public class ModelWord {
 	
 	public void setResource(int resource) {
 		this.resource = resource;
-	}	
-
+	}
+	
 	public int getLevel() {
 		return this.level;
 	}
@@ -45,5 +45,7 @@ public class ModelWord {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	
+	
 	
 }

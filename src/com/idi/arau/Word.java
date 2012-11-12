@@ -14,7 +14,7 @@ public class Word {
 	
 	public void drawTouchedLetters(Canvas canvas, String touchedLetters, int width, int height){
 		int xPos = width/3;
-		int yPos = (2*height)/3;
+		int yPos = (5*height)/6;
 		Paint paint = new Paint();	
 		paint.setTextSize(50);
 		canvas.drawText(touchedLetters,xPos,yPos,paint);	

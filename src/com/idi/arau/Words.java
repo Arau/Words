@@ -8,6 +8,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,20 +16,31 @@ import android.widget.EditText;
 
 public class Words extends Activity {
 	private Button button;
+	private static final int EASY = 0;
+	private static final int HARD = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		fillDataBase();
-		button = (Button) findViewById(R.id.button1);
+		button = (Button) findViewById(R.id.easy);
 		button.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
-				play();
+				play(EASY);
+			}
+		});
+		
+		button = (Button) findViewById(R.id.hard);
+		button.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+				play(HARD);
 			}
 		});
 
+		
 		button = (Button) findViewById(R.id.preferences);
 		button.setOnClickListener(new OnClickListener() {
 
@@ -79,14 +91,16 @@ public class Words extends Activity {
 		if (!existDB) {
 			WordsDataSource data = new WordsDataSource(this);
 			data.open();
-			ModelWord m = new ModelWord("apple", R.drawable.apple, 0);
-			ModelWord w = new ModelWord("orange", R.drawable.orange, 0);
-			ModelWord z = new ModelWord("pineapple", R.drawable.pineapple, 0);
+			ModelWord apple = new ModelWord("apple", R.drawable.apple,0);
+			ModelWord orange = new ModelWord("orange", R.drawable.orange,0);
+			ModelWord pineapple = new ModelWord("pineapple", R.drawable.pineapple,0);
+			ModelWord dumbbells = new ModelWord("dumbbells", R.drawable.dumbbells,1);
 
-			data.addWord(m);
-			data.addWord(w);
-			data.addWord(z);
-
+			data.addWord(apple);
+			data.addWord(orange);
+			data.addWord(pineapple);
+			data.addWord(dumbbells);
+			
 			data.close();
 		}
 	}
@@ -99,18 +113,25 @@ public class Words extends Activity {
 	protected void dumpDataBase() {
 		WordsDataSource data = new WordsDataSource(this);
 		data.open();
-		List<ModelWord> words = data.readAllWords();
+		List<ModelWord> wordsZ = data.readAllWords(0);
+		List<ModelWord> wordsO = data.readAllWords(1);
 		String text = "";
-		for (ModelWord word : words) {
+		for (ModelWord word : wordsZ) {
 			text = text + " " + word.getWord() + " " + word.getResource() + " ";
 		}
+		
+		for (ModelWord word : wordsO) {
+			text = text + " " + word.getWord() + " " + word.getResource() + " ";
+		}
+		
 		data.close();
 		EditText txt = (EditText) findViewById(R.id.editText1);
 		txt.setText(text);
 	}
 
-	private void play() {
-		Intent i = new Intent(this, Game.class);
+	private void play(int level) {
+		Intent i = new Intent(this, Game.class);		
+		i.putExtra("level", level);
 		startActivity(i);
 	}		
 }

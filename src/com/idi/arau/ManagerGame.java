@@ -9,16 +9,18 @@ public class ManagerGame {
 	private Word[] words;
 	private int[] bmps;
 	private int i;
+	private int level;
 
-	private ManagerGame(Context context) {
+	private ManagerGame(Context context, int level) {
 		this.context = context;
+		this.level = level;
 		i = 0;
 		defineWords();
 	}
 
-	public static ManagerGame getInstanceManager(Context context) {
+	public static ManagerGame getInstanceManager(Context context, int level) {
 		if (managerObject == null) {
-			managerObject = new ManagerGame(context);
+			managerObject = new ManagerGame(context, level);
 		}
 		return managerObject;
 	}
@@ -41,7 +43,7 @@ public class ManagerGame {
 	}
 
 	private void defineWords() {
-		DomainController controller = new DomainController(context);
+		DomainController controller = new DomainController(context, this.level);
 		String[] stringWords = controller.getWordsToPlay();
 
 		initWords(stringWords.length);
@@ -69,5 +71,5 @@ public class ManagerGame {
 
 	public void setIndex(int index) {
 		this.i = index;
-	}
+	}		
 }

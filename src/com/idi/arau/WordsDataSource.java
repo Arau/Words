@@ -8,15 +8,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class WordsDataSource {
 
 	private SQLiteDatabase database;
 	private DatabaseHelper dbHelper;
 	private String[] allColumns = { DatabaseHelper.COLUMN_ID,
-									DatabaseHelper.COLUMN_WORD, 
-									DatabaseHelper.COLUMN_PICTURE,
-									DatabaseHelper.COLUMN_LEVEL };
+			DatabaseHelper.COLUMN_WORD, DatabaseHelper.COLUMN_PICTURE, DatabaseHelper.COLUMN_LEVEL};
 
 	public WordsDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
@@ -34,6 +33,7 @@ public class WordsDataSource {
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COLUMN_WORD, word.getWord());
 		values.put(DatabaseHelper.COLUMN_PICTURE, word.getResource());
+		values.put(DatabaseHelper.COLUMN_LEVEL, word.getLevel());
 		long insertId = database.insert(DatabaseHelper.TABLE_WORDS, null,
 				values);
 		Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS, allColumns,
@@ -44,16 +44,17 @@ public class WordsDataSource {
 		return modifyedRows;
 	}
 
-	public List<ModelWord> readAllWords() {
+	public List<ModelWord> readAllWords(int level) {
 		List<ModelWord> words = new ArrayList<ModelWord>();
 		try {
-
+			String select = DatabaseHelper.COLUMN_LEVEL + "=" + level;
 			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
-					allColumns, null, null, null, null, null);
+					allColumns, select, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				ModelWord word = cursorToModelWord(cursor);
 				words.add(word);
+Log.v("ttt", "word: "+ word.getWord() +" " + word.getLevel());				
 				cursor.moveToNext();
 			}
 			cursor.close();
@@ -68,6 +69,8 @@ public class WordsDataSource {
 		model.setId(cursor.getLong(0));
 		model.setWord(cursor.getString(1));
 		model.setResource(cursor.getInt(2));
+		model.setLevel(cursor.getInt(3));
 		return model;
 	}
 }
+

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.SyncStateContract.Helpers;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +43,8 @@ public class Game extends Activity implements OnClickListener {
 
 	Button playAgain;
 	Button goStart;
+	
+	private int level;
 
 	// /////////////////////////////////////////////////////////////////////////////
 	// /// EVENTS
@@ -51,11 +52,22 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.manager = ManagerGame.getInstanceManager(this);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);						
+		this.level = defineLevel(); 		
+		this.manager = ManagerGame.getInstanceManager(this,this.level);
 		manager.restartIndex();
 	}
 
+	private int defineLevel() {
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+		    int value = extras.getInt("level");
+		    return value;
+		}
+		return 0;
+	}
+	
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -68,16 +80,13 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();	
-
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		toggleMusic();
-
 		fixWordIndex();
-		
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
-		layout.addView(timeBar);
-		view = new ViewGame(this, viewToGame);
+		layout.addView(timeBar);		
+		view = new ViewGame(this, viewToGame, this.level);
 		layout.addView(view);
 		setContentView(layout);
 		timeInit(timeBar);
@@ -327,7 +336,7 @@ public class Game extends Activity implements OnClickListener {
 
 	private void resetViewFromActivity() {
 		layout.removeView(view);
-		view = new ViewGame(this, viewToGame);
+		view = new ViewGame(this, viewToGame, this.level);
 		layout.addView(view);
 
 		killTimeThread();
@@ -342,14 +351,8 @@ public class Game extends Activity implements OnClickListener {
 		dialog = null;
 	}
 
-	private boolean musicShouldBeOn() {
-		if (pref.getBoolean("music", true))
-			Log.v("tes", "true");
-		else
-			Log.v("tes", "false");
-
+	private boolean musicShouldBeOn() {		
 		return pref.getBoolean("music", false);
-
 	}
 
 	private void stopMusic() {

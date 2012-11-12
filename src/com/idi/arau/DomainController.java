@@ -6,12 +6,14 @@ import android.content.Context;
 
 public class DomainController {
 
-	Context context;
-	String[] words;
-	int[] resources;
+	private Context context;
+	private String[] words;
+	private int[] resources;
+	private int level;
 
-	public DomainController(Context context) {
+	public DomainController(Context context, int level) {
 		this.context = context;
+		this.level = level;
 		catchData();
 	}
 
@@ -24,7 +26,7 @@ public class DomainController {
 	private List<ModelWord> readData() {
 		WordsDataSource data = new WordsDataSource(context);
 		data.open();
-		List<ModelWord> readedData = data.readAllWords();
+		List<ModelWord> readedData = data.readAllWords(this.level);
 		data.close();
 		return readedData;
 	}
