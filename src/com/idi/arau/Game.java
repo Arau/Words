@@ -54,7 +54,8 @@ public class Game extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);						
 		this.level = defineLevel(); 		
-		this.manager = ManagerGame.getInstanceManager(this,this.level);
+		this.manager = ManagerGame.getInstanceManager(this);
+		manager.setLevel(this.level);
 		manager.restartIndex();
 	}
 
@@ -325,6 +326,7 @@ public class Game extends Activity implements OnClickListener {
 
 	protected void playAgain() {
 		Intent i = new Intent(this, Game.class);
+		i.putExtra("level", this.level);
 		startActivity(i);
 	}
 

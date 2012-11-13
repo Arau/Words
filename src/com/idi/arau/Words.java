@@ -113,14 +113,10 @@ public class Words extends Activity {
 	protected void dumpDataBase() {
 		WordsDataSource data = new WordsDataSource(this);
 		data.open();
-		List<ModelWord> wordsZ = data.readAllWords(0);
-		List<ModelWord> wordsO = data.readAllWords(1);
-		String text = "";
-		for (ModelWord word : wordsZ) {
-			text = text + " " + word.getWord() + " " + word.getResource() + " ";
-		}
+		List<ModelWord> words = data.readAllWords();
 		
-		for (ModelWord word : wordsO) {
+		String text = "";
+		for (ModelWord word : words) {
 			text = text + " " + word.getWord() + " " + word.getResource() + " ";
 		}
 		

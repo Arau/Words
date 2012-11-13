@@ -42,7 +42,7 @@ public class ViewGame extends SurfaceView {
 		this.viewToGame = v;
 		this.context = context;
 		this.level = level;
-		this.manager = ManagerGame.getInstanceManager(context, this.level);		
+		this.manager = ManagerGame.getInstanceManager(context);		
 		isPaused = false;
 		if (!manager.isLast()) {
 			obtainNextWord();

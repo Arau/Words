@@ -1,64 +1,96 @@
 package com.idi.arau;
 
 import android.content.Context;
+import android.util.Log;
 
 public class ManagerGame {
 
 	private static ManagerGame managerObject;
 	private Context context;
-	private Word[] words;
-	private int[] bmps;
+	private Word[] words_level0;
+	private Word[] words_level1;
+	private int[] bmps_level0;
+	private int[] bmps_level1;
+	private int[] levels;
 	private int i;
-	private int level;
+	private int index0;
+	private int index1;
+	private int levelToPlay;
 
-	private ManagerGame(Context context, int level) {
+	private ManagerGame(Context context) {
 		this.context = context;
-		this.level = level;
 		i = 0;
+		index0 = 0;
+		index1 = 0;
 		defineWords();
 	}
-
-	public static ManagerGame getInstanceManager(Context context, int level) {
+	
+	public static ManagerGame getInstanceManager(Context context) {
 		if (managerObject == null) {
-			managerObject = new ManagerGame(context, level);
+			managerObject = new ManagerGame(context);
 		}
 		return managerObject;
 	}
 
 	public Word getNextWord() {
-		Word w = words[i];
+		Word w = words_level0[i];
+		if (levelToPlay == 1)			
+			w = words_level1[i];
 		return w;
 	}
 
-	public int getNextPicture() {
-		int bmp = bmps[i];
+	public int getNextPicture() {		
+		int bmp = bmps_level0[i];
+		if (levelToPlay == 1) {
+			bmp = bmps_level1[i];
+		}
 		++i;
 		return bmp;
 	}
 
 	public boolean isLast() {
-		if (i == words.length)
-			return true;
+		if (levelToPlay == 0) {
+			if (i == index0)
+				return true;
+		} else {
+			if (i == index1)
+				return true;
+		}
 		return false;
 	}
 
 	private void defineWords() {
-		DomainController controller = new DomainController(context, this.level);
+		DomainController controller = new DomainController(context);
 		String[] stringWords = controller.getWordsToPlay();
+		int[] bmps = controller.getResourcesToPlay();
+		int[] levels = controller.getLevels();
 
 		initWords(stringWords.length);
-
-		int i = 0;
+		
 		for (String stringWord : stringWords) {
 			Word word = new Word(stringWord);
-			words[i] = word;
-			++i;
+			
+			Log.v("ttt" ,"word:  " + word.getString());
+			Log.v("ttt" ,"levels["+ (index0 + index1) +"]  " + levels[index0 + index1]);
+			if (levels[index0 + index1] == 0) {
+				words_level0[index0] = word;
+				bmps_level0[index0] = bmps[index0 + index1];
+				++index0;
+			}
+			else {
+				words_level1[index1] = word;
+				bmps_level1[index1] = bmps[index0 + index1];
+				++index1;
+			}			
 		}
-		bmps = controller.getResourcesToPlay();
+		
 	}
 
 	private void initWords(int length) {
-		words = new Word[length];
+		words_level0 = new Word[length];
+		words_level1 = new Word[length];
+		bmps_level0 = new  int[length];
+		bmps_level1 = new  int[length];
 	}
 
 	public void restartIndex() {
@@ -71,5 +103,9 @@ public class ManagerGame {
 
 	public void setIndex(int index) {
 		this.i = index;
-	}		
+	}
+
+	public void setLevel(int level) {
+		this.levelToPlay = level;
+	}
 }

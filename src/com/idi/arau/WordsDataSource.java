@@ -44,12 +44,11 @@ public class WordsDataSource {
 		return modifyedRows;
 	}
 
-	public List<ModelWord> readAllWords(int level) {
+	public List<ModelWord> readAllWords() {
 		List<ModelWord> words = new ArrayList<ModelWord>();
-		try {
-			String select = DatabaseHelper.COLUMN_LEVEL + "=" + level;
+		try {			
 			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
-					allColumns, select, null, null, null, null);
+					allColumns, null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				ModelWord word = cursorToModelWord(cursor);
