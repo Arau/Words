@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center|right"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/dialogHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top|right"
+            android:paddingLeft="120dp"
+            android:paddingTop="0dp"
+            android:text="@string/help"
+            android:textColor="@color/white_text"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/helpText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@string/help" />
+
+        <LinearLayout
+            android:layout_width="321dp"
+            android:layout_height="95dp"
+            android:gravity="center"
+            android:paddingTop="30dp" >
+
+            <Button
+                android:id="@+id/exitHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exitHelp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

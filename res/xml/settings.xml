@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:key="preferences" >
+	
+    <CheckBoxPreference 
+        android:key="music"
+        android:title="Play music"
+        android:summary="Background music"  
+        android:defaultValue="true"
+        
+        />
+    
+    <CheckBoxPreference 
+        android:key="answer"
+        android:title="See words answers"
+        android:summary="Show answers if game over"  />
+    
+    
+	
+</PreferenceScreen>

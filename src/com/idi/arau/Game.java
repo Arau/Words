@@ -2,12 +2,16 @@ package com.idi.arau;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,9 +19,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
@@ -30,9 +37,9 @@ public class Game extends Activity implements OnClickListener {
 	private static final int DIALOG_HELP = 3;
 	private static final int TIME_X_WORD = 20;
 
-	private Dialog gameOverDialog	= null;
-	private Dialog finishDialog 	= null;
-	private Dialog helpDialog 		= null;
+	private Dialog gameOverDialog = null;
+	private Dialog finishDialog = null;
+	private Dialog helpDialog = null;
 
 	private ProgressBar timeBar;
 	private LinearLayout layout;
@@ -43,7 +50,7 @@ public class Game extends Activity implements OnClickListener {
 
 	Button playAgain;
 	Button goStart;
-	
+
 	private int level;
 
 	// /////////////////////////////////////////////////////////////////////////////
@@ -52,8 +59,8 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);						
-		this.level = defineLevel(); 		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.level = defineLevel();
 		this.manager = ManagerGame.getInstanceManager(this);
 		manager.setLevel(this.level);
 		manager.restartIndex();
@@ -62,13 +69,12 @@ public class Game extends Activity implements OnClickListener {
 	private int defineLevel() {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-		    int value = extras.getInt("level");
-		    return value;
+			int value = extras.getInt("level");
+			return value;
 		}
 		return 0;
 	}
-	
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -80,14 +86,14 @@ public class Game extends Activity implements OnClickListener {
 
 	@Override
 	protected void onResume() {
-		super.onResume();	
+		super.onResume();
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		toggleMusic();
 		fixWordIndex();
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
-		layout.addView(timeBar);		
-		view = new ViewGame(this, viewToGame, this.level);
+		layout.addView(timeBar);
+		view = new ViewGame(this, viewToGame);
 		layout.addView(view);
 		setContentView(layout);
 		timeInit(timeBar);
@@ -132,9 +138,9 @@ public class Game extends Activity implements OnClickListener {
 		case DIALOG_HELP:
 			dialog.setContentView(R.layout.help_dialog);
 			Button exit = (Button) dialog.findViewById(R.id.exitHelp);
-			exit.setOnClickListener(this);			
-			dialog.setCancelable(false);			
-			helpDialog = dialog;			
+			exit.setOnClickListener(this);
+			dialog.setCancelable(false);
+			helpDialog = dialog;
 			break;
 
 		default:
@@ -198,9 +204,9 @@ public class Game extends Activity implements OnClickListener {
 			goToStart();
 			break;
 		case R.id.exitHelp:
-//pause game
+			// pause game
 			dismiss(helpDialog);
-//play game			
+			// play game
 			break;
 		default:
 			finish();
@@ -218,7 +224,10 @@ public class Game extends Activity implements OnClickListener {
 
 	public void onTimeOut() {
 		if (timeThread.isTimeOut()) {
-			this.runOnUiThread(showGameOverDialog);
+			if (pref.getBoolean("answer", true)) {
+				this.runOnUiThread(showSolutionPopUp);
+			} else
+				this.runOnUiThread(showGameOverDialog);
 		}
 	}
 
@@ -312,12 +321,19 @@ public class Game extends Activity implements OnClickListener {
 		}
 	};
 
+	private Runnable showSolutionPopUp = new Runnable() {
+		@Override
+		public void run() {
+			showSolution();
+		}
+	};
+
 	private void showFinishDialog() {
 		this.runOnUiThread(showFinishDialog);
 	}
 
 	private void showGameOverDialog() {
-		this.runOnUiThread(showGameOverDialog);
+		this.runOnUiThread(showSolutionPopUp);
 	}
 
 	private void onHelp() {
@@ -336,9 +352,39 @@ public class Game extends Activity implements OnClickListener {
 		finish();
 	}
 
+	private void showSolution() {
+
+		LinearLayout viewGroup = (LinearLayout) this.findViewById(R.id.popup);
+		LayoutInflater layoutInflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+		int width = 405;
+		int height = 102;
+ 
+		final PopupWindow popup = new PopupWindow(this);
+		popup.setHeight(height);
+		popup.setWidth(width);
+		popup.setContentView(layout);
+		popup.setFocusable(true);
+
+		Typeface font = Typeface.createFromAsset(getAssets(),
+				"gloriahallelujah.ttf");
+		TextView txt = (TextView) popup.getContentView().findViewById(R.id.solution);
+		txt.setTypeface(font);
+		
+		String word = this.view.getStringCurrentWord();
+		txt.setText(word);
+		
+		// Clear the default translucent background
+		popup.setBackgroundDrawable(new BitmapDrawable());
+
+		popup.showAtLocation(layout, Gravity.NO_GRAVITY, 40, 570);
+	}
+
 	private void resetViewFromActivity() {
 		layout.removeView(view);
-		view = new ViewGame(this, viewToGame, this.level);
+		view = new ViewGame(this, viewToGame);
 		layout.addView(view);
 
 		killTimeThread();
@@ -353,7 +399,7 @@ public class Game extends Activity implements OnClickListener {
 		dialog = null;
 	}
 
-	private boolean musicShouldBeOn() {		
+	private boolean musicShouldBeOn() {
 		return pref.getBoolean("music", false);
 	}
 

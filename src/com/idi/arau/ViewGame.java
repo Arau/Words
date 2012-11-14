@@ -19,8 +19,7 @@ public class ViewGame extends SurfaceView {
 	private ManagerGame manager;
 
 	private Word word;
-	private Bitmap picture;
-	private int level;
+	private Bitmap picture;	
 	private ArrayList<Letter> alphabet;
 	private List<Letter> drawablesWord;
 	private List<Letter> touchedLetters = new ArrayList<Letter>();
@@ -37,11 +36,10 @@ public class ViewGame extends SurfaceView {
 	// /////////////////////////////////////////////////////////////////////////////
 	// /// PUBLIC
 
-	public ViewGame(Context context, ViewToGame v, int level) {
+	public ViewGame(Context context, ViewToGame v) {
 		super(context);
 		this.viewToGame = v;
-		this.context = context;
-		this.level = level;
+		this.context = context;		
 		this.manager = ManagerGame.getInstanceManager(context);		
 		isPaused = false;
 		if (!manager.isLast()) {
@@ -81,6 +79,10 @@ public class ViewGame extends SurfaceView {
 		return true;
 	}
 
+	public String getStringCurrentWord() {
+		return this.word.getString();
+	}
+	
 	public void setWord(String stringWord) {
 		this.word = new Word(stringWord);
 	}
@@ -129,15 +131,14 @@ public class ViewGame extends SurfaceView {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
-
-		int sizeX = this.getWidth() / 4;
-		int sizeY = this.getHeight() / 4;
+		
+		int sizeX = this.getWidth() / 5;
+		int sizeY = this.getHeight() / 6;
 		canvas.drawBitmap(this.picture, sizeX, sizeY, null);
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);
 		word.drawTouchedLetters(canvas, touchedString, this.getWidth(),
 				this.getHeight());
-
 	}
 
 	private void letterTouched(MotionEvent event) {
