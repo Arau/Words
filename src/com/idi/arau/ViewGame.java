@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -48,17 +49,6 @@ public class ViewGame extends SurfaceView {
 		} else {
 			finishGame();
 		}
-	}
-
-	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
-			float newHeigth) {
-		int width = mBitmap.getWidth();
-		int height = mBitmap.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
-		float scaleHeight = ((float) newHeigth) / height;
-		Matrix matrix = new Matrix();
-		matrix.postScale(scaleWidth, scaleHeight);
-		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
 	@Override
@@ -131,9 +121,11 @@ public class ViewGame extends SurfaceView {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
+		int drawableWidth = this.picture.getWidth();
+		int drawableHeight = this.picture.getHeight();
 		
-		int sizeX = this.getWidth() / 5;
-		int sizeY = this.getHeight() / 6;
+		int sizeX = (this.getWidth()/2) - (drawableWidth/2);
+		int sizeY = (this.getHeight()/3) - (drawableHeight/2);
 		canvas.drawBitmap(this.picture, sizeX, sizeY, null);
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);

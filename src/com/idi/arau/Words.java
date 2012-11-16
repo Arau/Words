@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -48,6 +47,15 @@ public class Words extends Activity {
 			@Override
 			public void onClick(View view) {
 				goPreferences();
+			}
+		});
+
+
+		button = (Button) findViewById(R.id.button2);
+		button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				flushDB();				
 			}
 		});
 
@@ -155,6 +163,10 @@ public class Words extends Activity {
 		EditText txt = (EditText) findViewById(R.id.editText1);
 		txt.setTypeface(font);
 		txt.setText(text);
+	}
+	
+	private void flushDB() {
+		this.deleteDatabase("wordsDB.db");
 	}
 
 	private void play(int level) {

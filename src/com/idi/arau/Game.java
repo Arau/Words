@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +20,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
@@ -98,9 +98,9 @@ public class Game extends Activity implements OnClickListener {
 		setContentView(layout);
 		timeInit(timeBar);
 		view.setTimeThread(timeThread, TIME_X_WORD);
-
-		String s = "musica: " + pref.getBoolean("music", true);
-		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+		//
+		// String s = "musica: " + pref.getBoolean("music", true);
+		// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -278,7 +278,10 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void gameOver() {
-			showGameOverDialog();
+			if (pref.getBoolean("answer", true)) {
+				showSolution();
+			} else
+				showGameOverDialog();
 		}
 	};
 
@@ -352,34 +355,51 @@ public class Game extends Activity implements OnClickListener {
 		finish();
 	}
 
-	private void showSolution() {
-
+	private View inflatePopupLayout() {
 		LinearLayout viewGroup = (LinearLayout) this.findViewById(R.id.popup);
 		LayoutInflater layoutInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+		return layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+	}
+
+	private void showSolution() {
+
+		View layout = inflatePopupLayout();
 
 		int width = 405;
 		int height = 102;
- 
+
 		final PopupWindow popup = new PopupWindow(this);
 		popup.setHeight(height);
 		popup.setWidth(width);
+
 		popup.setContentView(layout);
 		popup.setFocusable(true);
 
 		Typeface font = Typeface.createFromAsset(getAssets(),
 				"gloriahallelujah.ttf");
-		TextView txt = (TextView) popup.getContentView().findViewById(R.id.solution);
+		TextView txt = (TextView) popup.getContentView().findViewById(
+				R.id.solution);
 		txt.setTypeface(font);
-		
+
 		String word = this.view.getStringCurrentWord();
-		txt.setText(word);
+		txt.setText(word);		
+		int textPosition = (width/2) - (int) txt.getPaint().measureText(word)/2;
+		txt.setPadding(textPosition, 5, 0, 0);
 		
 		// Clear the default translucent background
 		popup.setBackgroundDrawable(new BitmapDrawable());
 
 		popup.showAtLocation(layout, Gravity.NO_GRAVITY, 40, 570);
+
+		popup.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				resetViewFromActivity();
+			}
+		});
 	}
 
 	private void resetViewFromActivity() {

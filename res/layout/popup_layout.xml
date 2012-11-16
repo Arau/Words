@@ -9,10 +9,7 @@
     <TextView
         android:id="@+id/solution"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top|right"
-        android:paddingLeft="60dp"
-        android:paddingTop="0dp"             
+        android:layout_height="wrap_content"                       
         android:textColor="@color/black"
         android:textSize="25dp" />
 
