@@ -125,7 +125,7 @@ public class ViewGame extends SurfaceView {
 		int drawableHeight = this.picture.getHeight();
 		
 		int sizeX = (this.getWidth()/2) - (drawableWidth/2);
-		int sizeY = (this.getHeight()/3) - (drawableHeight/2);
+		int sizeY = ((this.getHeight()*2)/5) - (drawableHeight/2);
 		canvas.drawBitmap(this.picture, sizeX, sizeY, null);
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);

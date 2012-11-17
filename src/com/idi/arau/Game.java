@@ -367,8 +367,8 @@ public class Game extends Activity implements OnClickListener {
 
 		View layout = inflatePopupLayout();
 
-		int width = 405;
-		int height = 102;
+		int width  = (view.getWidth()*5)/6;
+		int height = (view.getHeight()*1)/8;
 
 		final PopupWindow popup = new PopupWindow(this);
 		popup.setHeight(height);
@@ -390,8 +390,9 @@ public class Game extends Activity implements OnClickListener {
 		
 		// Clear the default translucent background
 		popup.setBackgroundDrawable(new BitmapDrawable());
-
-		popup.showAtLocation(layout, Gravity.NO_GRAVITY, 40, 570);
+		int x = (view.getWidth() - width) - ((view.getWidth()- width)/2);
+		int y = (view.getHeight()- height) - (height/4);
+		popup.showAtLocation(layout, Gravity.NO_GRAVITY, x, y);
 
 		popup.setOnDismissListener(new OnDismissListener() {
 
