@@ -2,46 +2,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
-  
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center|right"
+        android:gravity="center"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/dialogTextGameOver"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|top|right"
-            android:paddingLeft="60dp"
-            android:paddingTop="0dp"
-            android:text="@string/gameOver"
-            android:textColor="@color/white_text"
-            android:textSize="27dp" />
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/dialogTextGameOver"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/gameOver"
+                android:textColor="@color/white_text"
+                android:textSize="34dp" />
+
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_width="321dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingTop="30dp" >
 
-            <Button
-                android:id="@+id/playAgain"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/playAgain" />
+                android:layout_height="match_parent"
+                android:gravity="center" >
 
-            <Button
-                android:id="@+id/goStart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/goStart" />
+                <Button
+                    android:id="@+id/playAgain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/playAgain" />
+
+                <Button
+                    android:id="@+id/goStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/goStart" />
+
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 
 </RelativeLayout>

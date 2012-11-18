@@ -35,7 +35,7 @@ public class Game extends Activity implements OnClickListener {
 	private static final int DIALOG_GAMEOVER_ID = 1;
 	private static final int DIALOG_FINISH_GAME = 2;
 	private static final int DIALOG_HELP = 3;
-	private static final int TIME_X_WORD = 20;
+	private static final int TIME_X_WORD = 40;
 
 	private Dialog gameOverDialog = null;
 	private Dialog finishDialog = null;
@@ -118,7 +118,7 @@ public class Game extends Activity implements OnClickListener {
 
 		switch (id) {
 		case DIALOG_GAMEOVER_ID:
-			dialog.setContentView(R.layout.game_over_dialog);
+			dialog.setContentView(R.layout.game_over_dialog);			
 			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
 			playAgain.setOnClickListener(this);
 			Button goStart = (Button) dialog.findViewById(R.id.goStart);
@@ -277,9 +277,9 @@ public class Game extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public void gameOver() {
+		public void gameOver() {			
 			if (pref.getBoolean("answer", true)) {
-				showSolution();
+				showSolution();				
 			} else
 				showGameOverDialog();
 		}
@@ -336,7 +336,7 @@ public class Game extends Activity implements OnClickListener {
 	}
 
 	private void showGameOverDialog() {
-		this.runOnUiThread(showSolutionPopUp);
+		this.runOnUiThread(showGameOverDialog);
 	}
 
 	private void onHelp() {
@@ -367,8 +367,8 @@ public class Game extends Activity implements OnClickListener {
 
 		View layout = inflatePopupLayout();
 
-		int width  = (view.getWidth()*5)/6;
-		int height = (view.getHeight()*1)/8;
+		int width  = (view.getWidth()*5)/7;
+		int height = (view.getHeight()*1)/7;
 
 		final PopupWindow popup = new PopupWindow(this);
 		popup.setHeight(height);
@@ -385,8 +385,10 @@ public class Game extends Activity implements OnClickListener {
 
 		String word = this.view.getStringCurrentWord();
 		txt.setText(word);		
-		int textPosition = (width/2) - (int) txt.getPaint().measureText(word)/2;
-		txt.setPadding(textPosition, 5, 0, 0);
+		int textPositionX = (width/2) - (int) txt.getPaint().measureText(word)/2;
+		int textPositionY = (height/2)- (txt.getHeight()/2);
+		Log.v("ttttttt", "padding Y "+ textPositionY);
+		txt.setPadding(textPositionX, 0, 0, 0);
 		
 		// Clear the default translucent background
 		popup.setBackgroundDrawable(new BitmapDrawable());

@@ -1,18 +1,16 @@
 package com.idi.arau;
 
 import java.io.File;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class Words extends Activity {
 	private Button button;
@@ -22,6 +20,7 @@ public class Words extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		fillDataBase();
 		button = (Button) findViewById(R.id.easy);
@@ -49,24 +48,16 @@ public class Words extends Activity {
 				goPreferences();
 			}
 		});
-
-
-		button = (Button) findViewById(R.id.button2);
-		button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				flushDB();				
-			}
-		});
-
-		button = (Button) findViewById(R.id.button3);
+		
+		button = (Button) findViewById(R.id.help);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
-				dumpDataBase();
+			public void onClick(View view) {
+				goHelp();
 			}
-		});
+		});		
+
 	}
 
 	@Override
@@ -79,19 +70,6 @@ public class Words extends Activity {
 		Intent i = new Intent(this, Preferences.class);
 		startActivity(i);
 	}
-
-//	public void showPreferences() {
-//		SharedPreferences pref = getSharedPreferences(
-//				"com.arau.asteroides_preferences", MODE_PRIVATE);
-//		String s = "musica: " + pref.getBoolean("musica", true)
-//				+ ", gráficos: " + pref.getString("graficos", "?")
-//				+ ", fragmentos: " + pref.getString("fragmentos", "?")
-//				+ ", multijugador: " + pref.getBoolean("multijugador", true)
-//				+ ", numJugadors: " + pref.getString("numJugadores", "?")
-//				+ ", conexiones: " + pref.getString("conexiones", "?");
-//
-//		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-//	}
 
 	private void fillDataBase() {
 		Resources res = getResources();
@@ -147,28 +125,9 @@ public class Words extends Activity {
 		File dbFile = context.getDatabasePath(dbName);
 		return dbFile.exists();
 	}
-
-	protected void dumpDataBase() {
-		WordsDataSource data = new WordsDataSource(this);
-		data.open();
-		List<ModelWord> words = data.readAllWords();
-		
-		String text = "";
-		for (ModelWord word : words) {
-			text = text + " " + word.getWord() + " " + word.getResource() + " ";
-		}
-		
-		data.close();
-		Typeface font = Typeface.createFromAsset(getAssets(), "gloriahallelujah.ttf");
-		EditText txt = (EditText) findViewById(R.id.editText1);
-		txt.setTypeface(font);
-		txt.setText(text);
-	}
 	
-	private void flushDB() {
-		this.deleteDatabase("wordsDB.db");
-	}
-
+	private void goHelp() {}
+	
 	private void play(int level) {
 		Intent i = new Intent(this, Game.class);		
 		i.putExtra("level", level);

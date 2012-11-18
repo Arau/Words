@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,6 +26,7 @@ public class ViewGame extends SurfaceView {
 
 	private SurfaceHolder holder;
 	private GameLoopThread gameLoopThread;
+	private int maxSpeed;
 	private long lastClick = 0;
 	private TimeThread timeThread;
 	private int maxTimeValue;
@@ -59,7 +59,7 @@ public class ViewGame extends SurfaceView {
 				if (isPaused) {
 					playThreads();
 				} else {
-					if (event.getEventTime() - event.getDownTime() > 1800) { // LongClick as 1,8 sec's 
+					if (event.getEventTime() - event.getDownTime() > 1000) { 
 						pauseThreads();
 					}
 				}
@@ -130,7 +130,7 @@ public class ViewGame extends SurfaceView {
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);
 		word.drawTouchedLetters(canvas, touchedString, this.getWidth(),
-				this.getHeight());
+				this.getHeight(), this.word.getString().length());
 	}
 
 	private void letterTouched(MotionEvent event) {
@@ -302,10 +302,10 @@ public class ViewGame extends SurfaceView {
 		}
 
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), resource);
-		return new Letter(character, this, bmp);
+		return new Letter(character, this, bmp, this.maxSpeed);
 	}
 
-	private void initDrawables() {
+	private void initDrawables() {		
 		alphabet = new ArrayList<Letter>();
 
 		alphabet.add(createLetter('a'));
@@ -344,7 +344,7 @@ public class ViewGame extends SurfaceView {
 		return stringLetters;
 	}
 
-	private void drawLetters(Canvas canvas) {
+	private void drawLetters(Canvas canvas) {		
 		for (Letter letter : drawablesWord) {
 			letter.onDraw(canvas);
 		}
@@ -355,6 +355,11 @@ public class ViewGame extends SurfaceView {
 		viewToGame.gameOver();
 	}
 
+	private void defineSpeed() {
+		this.maxSpeed = 9;		
+		if (this.getWidth() < 300 && this.getHeight() < 300) this.maxSpeed = 6;
+	}
+	
 	SurfaceHolder.Callback playSurfaceCallback = new SurfaceHolder.Callback() {
 
 		@Override
@@ -371,7 +376,8 @@ public class ViewGame extends SurfaceView {
 		}
 
 		@Override
-		public void surfaceCreated(SurfaceHolder holder) {
+		public void surfaceCreated(SurfaceHolder holder) {	
+			defineSpeed();
 			initDrawables();
 			defineDrawablesWord();
 
