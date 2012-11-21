@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -106,18 +105,7 @@ public class ViewGame extends SurfaceView {
 		pauseThreads();
 		viewToGame.finishGame();
 	}
-
-	private Bitmap resizePicture() {
-		int width = this.picture.getWidth();
-		int height = this.picture.getHeight();
-		float scaleWidth = ((float) this.getWidth() / 3) / width;
-		float scaleHeight = ((float) this.getWidth() / 3) / height;
-		Matrix matrix = new Matrix();
-		matrix.postScale(scaleWidth, scaleHeight);
-		return Bitmap.createBitmap(this.picture, 0, 0, width, height, matrix,
-				false);
-	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
@@ -154,14 +142,6 @@ public class ViewGame extends SurfaceView {
 	}
 
 	private void startNextWord() {
-		// ViewGroup parent = (ViewGroup) this.getParent();
-		// ViewGame v = new ViewGame(context, viewToGame);
-		// parent.addView(v);
-		// restartTimeThread();
-		//
-		// parent.removeView(this);
-		//
-
 		viewToGame.resetView();
 	}
 
@@ -171,7 +151,6 @@ public class ViewGame extends SurfaceView {
 		if (gameLoopThread != null) {
 			killGameThread();
 		}
-		// cal fer un play i dir-li a manager la paraula on som.
 	}
 
 	private void playThreads() {

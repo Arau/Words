@@ -54,19 +54,7 @@
             android:layout_marginTop="8dip"
             android:textSize="18dip"
             android:layout_weight="0.2"
-            android:text="@string/preferences" />
-        
-        
-        <Button
-            android:id="@+id/help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_main"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dip"
-            android:textSize="18dip"
-            android:layout_weight="0.2"
-            android:text="@string/help" />
+            android:text="@string/preferences" />            
         
     </LinearLayout>
 </LinearLayout>

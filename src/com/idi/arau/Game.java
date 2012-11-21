@@ -7,10 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,7 +36,7 @@ public class Game extends Activity implements OnClickListener {
 	private static final int DIALOG_GAMEOVER_ID = 1;
 	private static final int DIALOG_FINISH_GAME = 2;
 	private static final int DIALOG_HELP = 3;
-	private static final int TIME_X_WORD = 40;
+	private int timePerWord;
 
 	private Dialog gameOverDialog = null;
 	private Dialog finishDialog = null;
@@ -52,6 +53,8 @@ public class Game extends Activity implements OnClickListener {
 	Button goStart;
 
 	private int level;
+	private SensorManager mSensorManager;
+	private ShakeEventListener mSensorListener;
 
 	// /////////////////////////////////////////////////////////////////////////////
 	// /// EVENTS
@@ -62,8 +65,23 @@ public class Game extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.level = defineLevel();
 		this.manager = ManagerGame.getInstanceManager(this);
+		initSensor();
 		manager.setLevel(this.level);
 		manager.restartIndex();
+	}
+
+	private void initSensor() {
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mSensorListener = new ShakeEventListener();
+		mSensorListener
+				.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+
+					public void onShake() {
+						if (pref.getBoolean("shake", true)) {
+							resetViewFromActivity();
+						}
+					}
+				});
 	}
 
 	private int defineLevel() {
@@ -81,6 +99,7 @@ public class Game extends Activity implements OnClickListener {
 		killTimeThread();
 		view.killGameThread();
 		view = null;
+		mSensorManager.unregisterListener(mSensorListener);
 		stopMusic();
 	};
 
@@ -90,6 +109,9 @@ public class Game extends Activity implements OnClickListener {
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		toggleMusic();
 		fixWordIndex();
+		mSensorManager.registerListener(mSensorListener,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
 		layout.addView(timeBar);
@@ -97,7 +119,7 @@ public class Game extends Activity implements OnClickListener {
 		layout.addView(view);
 		setContentView(layout);
 		timeInit(timeBar);
-		view.setTimeThread(timeThread, TIME_X_WORD);
+		view.setTimeThread(timeThread, timePerWord);
 		//
 		// String s = "musica: " + pref.getBoolean("music", true);
 		// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
@@ -118,7 +140,7 @@ public class Game extends Activity implements OnClickListener {
 
 		switch (id) {
 		case DIALOG_GAMEOVER_ID:
-			dialog.setContentView(R.layout.game_over_dialog);			
+			dialog.setContentView(R.layout.game_over_dialog);
 			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
 			playAgain.setOnClickListener(this);
 			Button goStart = (Button) dialog.findViewById(R.id.goStart);
@@ -217,7 +239,11 @@ public class Game extends Activity implements OnClickListener {
 	// /// PUBLIC
 
 	public void timeInit(ProgressBar timeBar) {
-		timeThread = new TimeThread(this, timeBar, TIME_X_WORD);
+		if (this.level == 1)
+			timePerWord = 40;
+		else
+			timePerWord = 25;
+		timeThread = new TimeThread(this, timeBar, timePerWord);
 		timeThread.setRunning(true);
 		timeThread.start();
 	}
@@ -234,7 +260,7 @@ public class Game extends Activity implements OnClickListener {
 	public void toggleMusic() {
 		if (musicShouldBeOn()) {
 			if (mp == null) {
-				mp = MediaPlayer.create(this, R.raw.gang);
+				mp = MediaPlayer.create(this, R.raw.song);
 				mp.setLooping(true);
 			}
 			mp.start();
@@ -268,6 +294,7 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void resetView() {
+			// okPopup();
 			resetViewFromActivity();
 		}
 
@@ -277,9 +304,9 @@ public class Game extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public void gameOver() {			
+		public void gameOver() {
 			if (pref.getBoolean("answer", true)) {
-				showSolution();				
+				showSolution();
 			} else
 				showGameOverDialog();
 		}
@@ -331,6 +358,13 @@ public class Game extends Activity implements OnClickListener {
 		}
 	};
 
+	private Runnable showOkPopup = new Runnable() {
+		@Override
+		public void run() {
+			showOk();
+		}
+	};
+
 	private void showFinishDialog() {
 		this.runOnUiThread(showFinishDialog);
 	}
@@ -341,6 +375,10 @@ public class Game extends Activity implements OnClickListener {
 
 	private void onHelp() {
 		this.runOnUiThread(showHelpDialog);
+	}
+
+	private void okPopup() {
+		this.runOnUiThread(showOkPopup);
 	}
 
 	protected void playAgain() {
@@ -360,15 +398,14 @@ public class Game extends Activity implements OnClickListener {
 		LayoutInflater layoutInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		return layoutInflater.inflate(R.layout.popup_layout, viewGroup);
-
 	}
 
 	private void showSolution() {
 
 		View layout = inflatePopupLayout();
 
-		int width  = (view.getWidth()*5)/7;
-		int height = (view.getHeight()*1)/7;
+		int width = (view.getWidth() * 5) / 7;
+		int height = (view.getHeight() * 1) / 7;
 
 		final PopupWindow popup = new PopupWindow(this);
 		popup.setHeight(height);
@@ -384,16 +421,53 @@ public class Game extends Activity implements OnClickListener {
 		txt.setTypeface(font);
 
 		String word = this.view.getStringCurrentWord();
-		txt.setText(word);		
-		int textPositionX = (width/2) - (int) txt.getPaint().measureText(word)/2;
-		int textPositionY = (height/2)- (txt.getHeight()/2);
-		Log.v("ttttttt", "padding Y "+ textPositionY);
+		txt.setText(word);
+		int textPositionX = (width / 2)
+				- (int) txt.getPaint().measureText(word) / 2;
+		int textPositionY = (height / 2) - (txt.getHeight() / 2);		
 		txt.setPadding(textPositionX, 0, 0, 0);
-		
+
 		// Clear the default translucent background
 		popup.setBackgroundDrawable(new BitmapDrawable());
-		int x = (view.getWidth() - width) - ((view.getWidth()- width)/2);
-		int y = (view.getHeight()- height) - (height/4);
+		int x = (view.getWidth() - width) - ((view.getWidth() - width) / 2);
+		int y = (view.getHeight() - height) - (height / 4);
+		popup.showAtLocation(layout, Gravity.NO_GRAVITY, x, y);
+
+		popup.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				resetViewFromActivity();
+			}
+		});
+	}
+
+	private View inflateOkLayout() {
+		LinearLayout viewGroup = (LinearLayout) this.findViewById(R.id.okpopup);
+		LayoutInflater layoutInflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		return layoutInflater.inflate(R.layout.ok_popup, viewGroup);
+	}
+
+	private void showOk() {
+		View layout = inflatePopupLayout();
+
+		int width = view.getWidth() / 2;
+		int height = view.getHeight() / 2;
+
+		final PopupWindow popup = new PopupWindow(this);
+		popup.setHeight(height);
+		popup.setWidth(width);
+
+		popup.setContentView(layout);
+		popup.setFocusable(true);
+
+		// Clear the default translucent background
+		popup.setBackgroundDrawable(new BitmapDrawable());
+		int x = (view.getWidth() - width) - ((view.getWidth() - width) / 2);
+		int y = (view.getHeight() - height) - ((view.getHeight() - height) / 2);
+
+		popup.setBackgroundDrawable(this.getResources().getDrawable(R.id.ok));
 		popup.showAtLocation(layout, Gravity.NO_GRAVITY, x, y);
 
 		popup.setOnDismissListener(new OnDismissListener() {
@@ -414,7 +488,7 @@ public class Game extends Activity implements OnClickListener {
 		restartTime();
 
 		setContentView(layout);
-		view.setTimeThread(timeThread, TIME_X_WORD);
+		view.setTimeThread(timeThread, timePerWord);
 	}
 
 	private void dismiss(Dialog dialog) {
@@ -441,7 +515,7 @@ public class Game extends Activity implements OnClickListener {
 				// mp.start();
 				editor.putBoolean("music", true);
 		} else {
-			mp = MediaPlayer.create(this, R.raw.gang);
+			mp = MediaPlayer.create(this, R.raw.song);
 			mp.setLooping(true);
 			editor.putBoolean("music", true);
 			// mp.start();

@@ -16,6 +16,15 @@
 	<string name="main_menu_label">Main menu</string>
 	<string name="toggle_music">Play/Pause music</string>
 	<string name="help">Help</string>
+	<string name="help_text">
+	Per solucionar la paraula cal clicar sobre les lletres que es mouen per
+	     formar la paraula que representa el la imatge central.
+	     Per exemple si la imatge central és "apple" cal clicar primer sobre la "a",
+	     després sobre la "p", etc. Fins arribar a completar la paraula completa. 
+	     Quan es finalitza correctament una paraula apareix una de nova, amb la seva
+	     imatge corresponent. 
+	     Si ja no queden més paraules, es pot veure un diàleg que així ho indica   
+	    </string>
 	<string name="exitHelp">Exit Help</string>
     
 </resources>

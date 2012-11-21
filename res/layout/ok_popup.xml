@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/okpopup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ok"
+    android:orientation="vertical" >
+
+    <TextView />
+    
+    <ImageView
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:src="@drawable/ok" />
+
+</LinearLayout>
