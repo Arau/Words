@@ -29,20 +29,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:textSize="18dip"
+            android:textSize="18dip"            
             android:background="@drawable/button_main"
             android:layout_marginTop="8dip"
+            android:textColor="@color/black"
             android:text="@string/easy" />
 
         <Button
             android:id="@+id/hard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_main"
+            android:background="@drawable/button_main"            
             android:layout_gravity="center"
             android:textSize="18dip"
             android:layout_weight="0.2"
             android:layout_marginTop="8dip"
+            android:textColor="@color/black"
             android:text="@string/hard" />
 
         <Button
@@ -54,7 +56,20 @@
             android:layout_marginTop="8dip"
             android:textSize="18dip"
             android:layout_weight="0.2"
-            android:text="@string/preferences" />            
+            android:textColor="@color/black"
+            android:text="@string/preferences" />     
+
+         <Button
+            android:id="@+id/userButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_main"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dip"
+            android:textSize="18dip"
+            android:layout_weight="0.2"
+            android:textColor="@color/black"
+            android:text="Users" />     
         
     </LinearLayout>
 </LinearLayout>

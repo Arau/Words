@@ -51,7 +51,17 @@ public class Words extends Activity {
 			public void onClick(View view) {
 				goPreferences();
 			}
+		});
+		
+		button = (Button) findViewById(R.id.userButton);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				goUsers();
+			}
 		});	
+
 	}
 
 	@Override
@@ -70,6 +80,10 @@ public class Words extends Activity {
 		startActivity(i);
 	}
 	
+	protected void goUsers() {
+		Intent i = new Intent(this, UserActivity.class);
+		startActivity(i);		
+	}
 
 	private void fillDataBase() {
 		Resources res = getResources();
