@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.idi.arau"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="16" />
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
 
     <application
+        android:allowBackup="true"
         android:icon="@drawable/words_icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
         <activity
             android:name="Words"
             android:label="Words"
@@ -29,7 +32,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".Preferences"
+            android:name=".SetPreferenceActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -40,7 +43,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>        
     </application>
 
 </manifest>

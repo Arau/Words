@@ -10,6 +10,9 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -58,7 +61,7 @@ public class Words extends Activity {
 
 			@Override
 			public void onClick(View view) {
-				goUsers();
+				
 			}
 		});	
 
@@ -76,13 +79,46 @@ public class Words extends Activity {
 	}
 
 	protected void goPreferences() {
-		Intent i = new Intent(this, Preferences.class);
+		Intent i = new Intent(this, SetPreferenceActivity.class);
 		startActivity(i);
 	}
 	
-	protected void goUsers() {
+	protected void goCreateUser() {
 		Intent i = new Intent(this, UserActivity.class);
 		startActivity(i);		
+	}
+	
+	protected void goGallery() {
+		Intent i = new Intent(this, UserActivity.class);
+		startActivity(i);		
+	}
+	
+	protected void goHelp() {
+		Intent i = new Intent(this, UserActivity.class);
+		startActivity(i);		
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_main, menu);	
+		return true;
+	}	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.addUser:
+			goCreateUser();
+			return true;
+		case R.id.pictures:
+			goGallery();
+			return true;		
+		case R.id.help:
+			goHelp();
+			return true;
+		}
+		return false;
 	}
 
 	private void fillDataBase() {

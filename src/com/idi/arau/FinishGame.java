@@ -1,5 +1,6 @@
 package com.idi.arau;
 
+import android.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ public class FinishGame extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.finish);
+	//	setContentView(R.layout.finish);
 		Toast toast = Toast.makeText(this, "Finished game", Toast.LENGTH_SHORT);
 		toast.show();
 		button = (Button) findViewById(R.id.button1);

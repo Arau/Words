@@ -1,0 +1,7 @@
+./res/drawable*
+./res/raw
+./bin/*
+*~
+project*
+\.project
+./assets

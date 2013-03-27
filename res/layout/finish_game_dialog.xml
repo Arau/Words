@@ -22,7 +22,7 @@
                 android:paddingLeft="60dp"
                 android:paddingTop="0dp"
                 android:text="@string/finishGame"
-                android:textColor="@color/white_text"
+                android:textColor="@color/black"
                 android:textSize="27dp" />
         </LinearLayout>
 
