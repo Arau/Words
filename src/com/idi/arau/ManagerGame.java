@@ -70,8 +70,6 @@ public class ManagerGame {
 		for (String stringWord : stringWords) {
 			Word word = new Word(stringWord);
 			
-			Log.v("ttt" ,"word:  " + word.getString());
-			Log.v("ttt" ,"levels["+ (index0 + index1) +"]  " + levels[index0 + index1]);
 			if (levels[index0 + index1] == 0) {
 				words_level0[index0] = word;
 				bmps_level0[index0] = bmps[index0 + index1];
