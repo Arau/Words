@@ -61,7 +61,7 @@ public class Words extends Activity {
 
 			@Override
 			public void onClick(View view) {
-				
+				goGallery();
 			}
 		});	
 
@@ -89,7 +89,7 @@ public class Words extends Activity {
 	}
 	
 	protected void goGallery() {
-		Intent i = new Intent(this, UserActivity.class);
+		Intent i = new Intent(this, Gallery.class);
 		startActivity(i);		
 	}
 	
