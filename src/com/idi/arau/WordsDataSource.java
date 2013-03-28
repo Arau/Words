@@ -52,8 +52,7 @@ public class WordsDataSource {
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				ModelWord word = cursorToModelWord(cursor);
-				words.add(word);
-Log.v("ttt", "word: "+ word.getWord() +" " + word.getLevel());				
+				words.add(word);		
 				cursor.moveToNext();
 			}
 			cursor.close();
