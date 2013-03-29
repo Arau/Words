@@ -2,6 +2,7 @@ package com.idi.arau;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -14,8 +15,8 @@ public class Gallery extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.grid);
 
-	    GridView gridview = (GridView) findViewById(R.id.gridview);
-	    gridview.setAdapter(new ImageAdapter(this));
+	    GridView gridview = (GridView) findViewById(R.id.gridview);	    
+	    gridview.setAdapter(new ImageAdapter(this));	    
 
 	    gridview.setOnItemClickListener(new OnItemClickListener() {
 	        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
