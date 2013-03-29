@@ -9,9 +9,11 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
+	private Integer[] mThumbIds;
 
-	public ImageAdapter(Context c) {
+	public ImageAdapter(Context c) {		
         mContext = c;
+        mThumbIds = getImages();
     }
 
     public int getCount() {
@@ -36,14 +38,13 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
-        }
-
+        }                        
         imageView.setImageResource(mThumbIds[position]);
         return imageView;
     }
 
     // references to our images
-    private Integer[] mThumbIds = {
+    /*private Integer[] mThumbIds = {
             R.drawable.apple, R.drawable.basket,
             R.drawable.boat, R.drawable.bottle,
             R.drawable.coins, R.drawable.dumbbells,
@@ -51,4 +52,17 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.tie, R.drawable.pineapple,
             R.drawable.snail, R.drawable.wheel
     };     
+    */        
+    
+    private Integer[] getImages() {    	
+		DomainController manager = DomainController.getDomainControllerInstance(mContext);		 
+    	int[] resources = manager.getResourcesToPlay();
+    	int i = 0;
+    	Integer[] convertedResources = new Integer[resources.length];
+    	for (int value: resources) {
+    		convertedResources[i] = value;    		 
+    		++i;
+    	}
+    	return convertedResources;
+    }        
 }
