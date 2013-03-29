@@ -6,48 +6,48 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class WordsDataSource {
 
-	private SQLiteDatabase database;
+	private static WordsDataSource dataInstance;	
 	private DatabaseHelper dbHelper;
 	private String[] allColumns = { DatabaseHelper.COLUMN_ID,
 			DatabaseHelper.COLUMN_WORD, DatabaseHelper.COLUMN_PICTURE, DatabaseHelper.COLUMN_LEVEL};
 
-	public WordsDataSource(Context context) {
+	private WordsDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
+	}	
+	
+	public static WordsDataSource getInstance(Context context) {
+		if (dataInstance == null) {
+			dataInstance = new WordsDataSource(context);
+		}
+		return dataInstance;
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getReadableDatabase();
+	public void addWords(List<ModelWord> words) {
+		SQLiteDatabase database = dbHelper.getWritableDatabase();
+		for (ModelWord word: words) {
+			addWord(word, database);
+		}
+		database.close();
 	}
-
-	public void close() {
-		dbHelper.close();
-	}
-
-	public int addWord(ModelWord word) {
+	
+	private void addWord(ModelWord word, SQLiteDatabase database) {		
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COLUMN_WORD, word.getWord());
 		values.put(DatabaseHelper.COLUMN_PICTURE, word.getResource());
 		values.put(DatabaseHelper.COLUMN_LEVEL, word.getLevel());
 		long insertId = database.insert(DatabaseHelper.TABLE_WORDS, null,
-				values);
-		Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS, allColumns,
-				DatabaseHelper.COLUMN_ID + " = " + insertId, null, null, null,
-				null);
-		int modifyedRows = cursor.getCount();
-		cursor.close();
-		return modifyedRows;
+				values);						
 	}
 
 	public List<ModelWord> readAllWords() {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		List<ModelWord> words = new ArrayList<ModelWord>();
 		try {			
-			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
+			Cursor cursor = db.query(DatabaseHelper.TABLE_WORDS,
 					allColumns, null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -57,11 +57,34 @@ public class WordsDataSource {
 			}
 			cursor.close();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
+		db.close();
 		return words;
 	}
 
+//	public List<Integer> readResources() {		
+//		
+//		List<Integer> resources = new ArrayList<Integer>();
+//		try {			
+//			String[] projection = { DatabaseHelper.COLUMN_PICTURE };
+//			
+//			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
+//					projection, null, null, null, null, null);
+//			
+//			cursor.moveToFirst();
+//			while (!cursor.isAfterLast()) {
+//				resources.add(cursor.getInt(0));					
+//				cursor.moveToNext();
+//			}
+//			cursor.close();			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return resources;		
+//	}	
+	
 	private ModelWord cursorToModelWord(Cursor cursor) {
 		ModelWord model = new ModelWord();
 		model.setId(cursor.getLong(0));

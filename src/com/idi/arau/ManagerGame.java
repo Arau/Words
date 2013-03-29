@@ -1,7 +1,6 @@
 package com.idi.arau;
 
 import android.content.Context;
-import android.util.Log;
 
 public class ManagerGame {
 
@@ -60,7 +59,7 @@ public class ManagerGame {
 	}
 
 	private void defineWords() {
-		DomainController controller = new DomainController(context);
+		DomainController controller = DomainController.getDomainControllerInstance(context);
 		String[] stringWords = controller.getWordsToPlay();
 		int[] bmps = controller.getResourcesToPlay();
 		int[] levels = controller.getLevels();

@@ -1,14 +1,13 @@
 package com.idi.arau;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class Words extends Activity {
 	private Button button;
@@ -126,8 +124,7 @@ public class Words extends Activity {
 		boolean existDB = checkDBStock(new ContextWrapper(this),
 				res.getString(R.string.dataBaseName));
 		if (!existDB) {
-			WordsDataSource data = new WordsDataSource(this);
-			data.open();
+			WordsDataSource data = WordsDataSource.getInstance(this);			
 
 			// Level 0
 			ModelWord apple = new ModelWord("apple", R.drawable.apple, 0);
@@ -151,26 +148,29 @@ public class Words extends Activity {
 					R.drawable.screwdriver, 1);
 			ModelWord seagull = new ModelWord("seagull", R.drawable.seagull, 1);
 			ModelWord snail = new ModelWord("snail", R.drawable.snail, 1);
+			
+			List<ModelWord> words = new ArrayList<ModelWord>();
+			
+			words.add(apple);
+			words.add(basket);
+			words.add(boat);
+			words.add(bottle);
+			words.add(coins);
+			words.add(engine);
+			words.add(orange);
+			words.add(pineapple);
+			words.add(tie);
+			words.add(wheel);
 
-			data.addWord(apple);
-			data.addWord(basket);
-			data.addWord(boat);
-			data.addWord(bottle);
-			data.addWord(coins);
-			data.addWord(engine);
-			data.addWord(orange);
-			data.addWord(pineapple);
-			data.addWord(tie);
-			data.addWord(wheel);
-
-			data.addWord(dumbbells);
-			data.addWord(dustbin);
-			data.addWord(helmet);
-			data.addWord(screwdriver);
-			data.addWord(seagull);
-			data.addWord(snail);
-
-			data.close();
+			words.add(dumbbells);
+			words.add(dustbin);
+			words.add(helmet);
+			words.add(screwdriver);
+			words.add(seagull);
+			words.add(snail);
+			
+			data.addWords(words);
+			
 		}
 	}
 

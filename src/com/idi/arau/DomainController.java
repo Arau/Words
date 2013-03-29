@@ -3,38 +3,44 @@ package com.idi.arau;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 
 public class DomainController {
 
+	private static DomainController domainControllerObject;
 	private Context context;
 	private String[] words;
 	private int[] resources;
 	private int[] levels;	
 
-	public DomainController(Context context) {
-		this.context = context;		
+	private DomainController(Context context) {
+		this.context = context;			
 		catchData();
 	}
+	
+	public static DomainController getDomainControllerInstance(Context context) {
+		if (domainControllerObject == null) {						
+			domainControllerObject = new DomainController(context);			
+		}		
+		return domainControllerObject;
+	}
+		
 
-	private void catchData() {
+	private void catchData() {		
 		List<ModelWord> readedData = readData();
 		initArrays(readedData.size());
 		fillData(readedData);
 	}
 
-	private List<ModelWord> readData() {
-		WordsDataSource data = new WordsDataSource(context);
-		data.open();
-		List<ModelWord> readedData = data.readAllWords();
-		data.close();
+	private List<ModelWord> readData() {		
+		WordsDataSource data = WordsDataSource.getInstance(context);		
+		List<ModelWord> readedData = data.readAllWords();				
 		return readedData;
 	}
 
-	private void fillData(List<ModelWord> readedData) {
+	private void fillData(List<ModelWord> readedData) {		
 		int i = 0;
 		for (ModelWord word : readedData) {					
-			words[i] 	 = word.getWord();			
+			words[i] 	 = word.getWord();					
 			resources[i] = word.getResource();				
 			levels[i] 	 = word.getLevel();					
 			++i;
@@ -47,11 +53,11 @@ public class DomainController {
 		levels = new int[size];
 	}
 
-	public String[] getWordsToPlay() {
+	public String[] getWordsToPlay() {		
 		return words;
 	}
 
-	public int[] getResourcesToPlay() {
+	public int[] getResourcesToPlay() {	
 		return resources;
 	}
 	
