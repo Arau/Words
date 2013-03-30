@@ -33,26 +33,15 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+            imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(6, 6, 6, 6);
         } else {
             imageView = (ImageView) convertView;
         }                        
         imageView.setImageResource(mThumbIds[position]);
         return imageView;
     }
-
-    // references to our images
-    /*private Integer[] mThumbIds = {
-            R.drawable.apple, R.drawable.basket,
-            R.drawable.boat, R.drawable.bottle,
-            R.drawable.coins, R.drawable.dumbbells,
-            R.drawable.engine, R.drawable.helmet,
-            R.drawable.tie, R.drawable.pineapple,
-            R.drawable.snail, R.drawable.wheel
-    };     
-    */        
     
     private Integer[] getImages() {    	
 		DomainController manager = DomainController.getDomainControllerInstance(mContext);		 
