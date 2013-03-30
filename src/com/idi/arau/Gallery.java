@@ -1,8 +1,11 @@
 package com.idi.arau;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -23,5 +26,23 @@ public class Gallery extends Activity {
 	            Toast.makeText(Gallery.this, "" + position, Toast.LENGTH_SHORT).show();
 	        }
 	    });
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.gallery_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){		
+		switch (item.getItemId()){
+        	case R.id.addToGallery:
+        		Intent i = new Intent(this, AddImage.class);
+        		startActivity(i);
+        		break;
+		}
+		return false;
 	}
 }
