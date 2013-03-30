@@ -29,5 +29,6 @@
     <string name="user_name">Name</string>
     <string name="add_user">Add user</string>
     <string name="pictures">Pictures</string>
+    <string name="gallery_title">Gallery</string>
 
 </resources>
