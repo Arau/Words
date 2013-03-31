@@ -1,6 +1,7 @@
 package com.idi.arau;
 
 import java.util.List;
+import java.util.Random;
 
 import android.content.Context;
 
@@ -27,6 +28,7 @@ public class DomainController {
 
 	private void catchData() {		
 		List<ModelWord> readedData = readData();
+		shuffleList(readedData);
 		initArrays(readedData.size());
 		fillData(readedData);
 	}
@@ -53,6 +55,23 @@ public class DomainController {
 		levels = new int[size];
 	}
 
+	public static void shuffleList(List<ModelWord> a) {
+	    int n = a.size();
+	    Random random = new Random();
+	    random.nextInt();
+	    for (int i = 0; i < n; i++) {
+	      int change = i + random.nextInt(n - i);
+	      swap(a, i, change);
+	    }
+	  }
+
+	  private static void swap(List<ModelWord> a, int i, int change) {
+	    ModelWord aux = a.get(i);
+	    a.set(i, a.get(change));
+	    a.set(change, aux);
+	  }
+	
+	
 	public String[] getWordsToPlay() {		
 		return words;
 	}
