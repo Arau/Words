@@ -33,7 +33,7 @@ public class WordsDataSource {
 		}
 		database.close();
 	}
-	
+		
 	private void addWord(ModelWord word, SQLiteDatabase database) {		
 		ContentValues values = new ContentValues();
 		values.put(DatabaseHelper.COLUMN_WORD, word.getWord());
@@ -62,28 +62,6 @@ public class WordsDataSource {
 		db.close();
 		return words;
 	}
-
-//	public List<Integer> readResources() {		
-//		
-//		List<Integer> resources = new ArrayList<Integer>();
-//		try {			
-//			String[] projection = { DatabaseHelper.COLUMN_PICTURE };
-//			
-//			Cursor cursor = database.query(DatabaseHelper.TABLE_WORDS,
-//					projection, null, null, null, null, null);
-//			
-//			cursor.moveToFirst();
-//			while (!cursor.isAfterLast()) {
-//				resources.add(cursor.getInt(0));					
-//				cursor.moveToNext();
-//			}
-//			cursor.close();			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return resources;		
-//	}	
 	
 	private ModelWord cursorToModelWord(Cursor cursor) {
 		ModelWord model = new ModelWord();

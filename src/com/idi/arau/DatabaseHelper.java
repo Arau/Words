@@ -19,20 +19,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String CREATE_WORDS = "CREATE TABLE " + TABLE_WORDS
 			+ " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ COLUMN_WORD + " TEXT, " + COLUMN_PICTURE + " TEXT," + COLUMN_LEVEL + " INTEGER );";
-	
-	private static final String CREATE_CUSTOM =  "CREATE TABLE " + TABLE_CUSTOM
-			+ " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ COLUMN_WORD + " TEXT, " + COLUMN_PICTURE + " TEXT," + COLUMN_LEVEL + " INTEGER );";
-	
-	
+		
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, 1);		
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_WORDS);
-		db.execSQL(CREATE_CUSTOM);
+		db.execSQL(CREATE_WORDS);		
 	}
 
 	@Override
