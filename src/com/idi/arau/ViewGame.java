@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.idi.arau.R;
+import com.idi.arau.R.drawable;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -167,10 +170,15 @@ public class ViewGame extends SurfaceView {
 		gameLoopThread.start();
 	}
 
-	private void obtainNextWord() {
+	private void obtainNextWord() {						
 		this.word = manager.getNextWord();
 		int resource = manager.getNextPicture();
-		this.picture = BitmapFactory.decodeResource(getResources(), resource);
+		if (resource == -1) {
+			
+		}
+		else {
+			this.picture = BitmapFactory.decodeResource(getResources(), resource);
+		}
 	}
 
 	private void restartTimeThread() {

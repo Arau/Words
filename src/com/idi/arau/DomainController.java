@@ -72,7 +72,7 @@ public class DomainController {
 	  }
 	
 	
-	public String[] getWordsToPlay() {		
+	public String[] getWordsToPlay() {			
 		return words;
 	}
 

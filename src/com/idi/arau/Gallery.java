@@ -1,5 +1,10 @@
 package com.idi.arau;
 
+import com.idi.arau.R;
+import com.idi.arau.R.id;
+import com.idi.arau.R.layout;
+import com.idi.arau.R.menu;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +23,12 @@ public class Gallery extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.grid);
 
-	    GridView gridview = (GridView) findViewById(R.id.gridview);	    
+   	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GridView gridview = (GridView) findViewById(R.id.gridview);	    
 	    gridview.setAdapter(new ImageAdapter(this));	    
 
 	    gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -26,6 +36,7 @@ public class Gallery extends Activity {
 	            Toast.makeText(Gallery.this, "" + position, Toast.LENGTH_SHORT).show();
 	        }
 	    });
+
 	}
 	
 	@Override

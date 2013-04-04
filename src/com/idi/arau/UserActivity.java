@@ -1,5 +1,9 @@
 package com.idi.arau;
 
+import com.idi.arau.R;
+import com.idi.arau.R.layout;
+import com.idi.arau.R.menu;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

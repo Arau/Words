@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class Word {
 	String word;
-	Drawable picture;
+	boolean isCustom;
 
 	public Word(String word) {
 		this.word = word;
@@ -23,11 +23,7 @@ public class Word {
 		paint.setStrokeWidth(3);
 		if (width > 300 && height > 300) paint.setTextSize(50); 		
 		canvas.drawText(touchedLetters,xPos,yPos,paint);	
-	}
-	
-	public void onDraw(Canvas canvas) {
-
-	}
+	}	
 
 	public Boolean checkWord(String touchedLetters) {
 		for (int i = 0; i < touchedLetters.length(); i++) {					

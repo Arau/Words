@@ -1,5 +1,12 @@
 package com.idi.arau;
 
+import com.idi.arau.R;
+import com.idi.arau.R.drawable;
+import com.idi.arau.R.id;
+import com.idi.arau.R.layout;
+import com.idi.arau.R.menu;
+import com.idi.arau.R.raw;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;

@@ -4,6 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.idi.arau.R;
+import com.idi.arau.R.drawable;
+import com.idi.arau.R.id;
+import com.idi.arau.R.layout;
+import com.idi.arau.R.menu;
+import com.idi.arau.R.string;
+
+
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.content.Intent;

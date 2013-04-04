@@ -1,5 +1,6 @@
 package com.idi.arau;
 
+
 import android.graphics.Canvas;
 
 class GameLoopThread extends Thread {

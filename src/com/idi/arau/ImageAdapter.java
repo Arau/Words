@@ -1,6 +1,9 @@
 package com.idi.arau;
 
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,11 +12,12 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
+	private String[] names;
 	private Integer[] mThumbIds;
 
 	public ImageAdapter(Context c) {		
         mContext = c;
-        mThumbIds = getImages();
+        getImages();
     }
 
     public int getCount() {
@@ -32,26 +36,38 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
+            imageView = new ImageView(mContext);            
+            imageView.setLayoutParams(new GridView.LayoutParams(120, 120));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(6, 6, 6, 6);
         } else {
             imageView = (ImageView) convertView;
         }                        
-        imageView.setImageResource(mThumbIds[position]);
+    
+        if (mThumbIds[position] == -1) { 
+        	setImgFromDecodedFile(imageView, names[position]); 
+        }        	        	        
+        else {
+        	imageView.setImageResource(mThumbIds[position]);
+        }
         return imageView;
     }
     
-    private Integer[] getImages() {    	
-		DomainController manager = DomainController.getDomainControllerInstance(mContext);		 
+    private void getImages() {    	
+		DomainController manager = DomainController.getDomainControllerInstance(mContext);
+		names  = manager.getWordsToPlay();				
     	int[] resources = manager.getResourcesToPlay();
     	int i = 0;
-    	Integer[] convertedResources = new Integer[resources.length];
+    	mThumbIds = new Integer[resources.length];
     	for (int value: resources) {
-    		convertedResources[i] = value;    		 
+    		mThumbIds[i] = value;    		 
     		++i;
-    	}
-    	return convertedResources;
-    }        
+    	}    	
+    }   
+    
+    private void setImgFromDecodedFile(ImageView imageView, String fileName) {
+    	String path = mContext.getFilesDir().getPath() + '/' + fileName;
+    	Bitmap bmp = BitmapFactory.decodeFile(path);
+    	imageView.setImageBitmap(bmp);
+    }
 }

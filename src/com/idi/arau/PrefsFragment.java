@@ -1,5 +1,8 @@
 package com.idi.arau;
 
+import com.idi.arau.R;
+import com.idi.arau.R.xml;
+
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;

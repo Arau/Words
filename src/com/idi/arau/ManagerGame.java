@@ -1,5 +1,6 @@
 package com.idi.arau;
 
+
 import android.content.Context;
 
 public class ManagerGame {
@@ -15,6 +16,7 @@ public class ManagerGame {
 	private int index0;
 	private int index1;
 	private int levelToPlay;
+	private boolean isCustom = false;
 
 	private ManagerGame(Context context) {
 		this.context = context;
@@ -56,6 +58,12 @@ public class ManagerGame {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean nextWordIsCustom() {
+				
+		
+		return isCustom;
 	}
 
 	private void defineWords() {
