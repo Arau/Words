@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.idi.arau"
+    package="com.idi.arau"    
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="Game"
+            android:name=".Game"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -38,12 +38,14 @@
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>        
+        <activity
+          android:name=".Gallery">
+        </activity>
+        <activity
+            android:name=".AddImage"
+            android:screenOrientation="portrait" >
+        </activity>            
     </application>
 
 </manifest>
