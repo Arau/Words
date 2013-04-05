@@ -1,6 +1,8 @@
 package com.idi.arau;
 
 
+import java.util.List;
+
 import android.content.Context;
 
 public class ManagerGame {
@@ -68,23 +70,23 @@ public class ManagerGame {
 
 	private void defineWords() {
 		DomainController controller = DomainController.getDomainControllerInstance(context);
-		String[] stringWords = controller.getWordsToPlay();
-		int[] bmps = controller.getResourcesToPlay();
-		int[] levels = controller.getLevels();
+		List<String> stringWords = controller.getWordsToPlay();
+		List<Integer> bmps = controller.getResourcesToPlay();
+		List<Integer> levels = controller.getLevels();
 
-		initWords(stringWords.length);
+		initWords(stringWords.size());
 		
 		for (String stringWord : stringWords) {
 			Word word = new Word(stringWord);
 			
-			if (levels[index0 + index1] == 0) {
+			if (levels.get(index0 + index1) == 0) {
 				words_level0[index0] = word;
-				bmps_level0[index0] = bmps[index0 + index1];
+				bmps_level0[index0] = bmps.get(index0 + index1);
 				++index0;
 			}
 			else {
 				words_level1[index1] = word;
-				bmps_level1[index1] = bmps[index0 + index1];
+				bmps_level1[index1] = bmps.get(index0 + index1);
 				++index1;
 			}			
 		}

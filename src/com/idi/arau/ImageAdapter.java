@@ -1,6 +1,8 @@
 package com.idi.arau;
 
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +14,7 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
-	private String[] names;
+	private List<String> names;
 	private Integer[] mThumbIds;
 
 	public ImageAdapter(Context c) {		
@@ -45,7 +47,7 @@ public class ImageAdapter extends BaseAdapter {
         }                        
     
         if (mThumbIds[position] == -1) { 
-        	setImgFromDecodedFile(imageView, names[position]); 
+        	setImgFromDecodedFile(imageView, names.get(position)); 
         }        	        	        
         else {
         	imageView.setImageResource(mThumbIds[position]);
@@ -56,9 +58,9 @@ public class ImageAdapter extends BaseAdapter {
     private void getImages() {    	
 		DomainController manager = DomainController.getDomainControllerInstance(mContext);
 		names  = manager.getWordsToPlay();				
-    	int[] resources = manager.getResourcesToPlay();
+    	List<Integer> resources = manager.getResourcesToPlay();
     	int i = 0;
-    	mThumbIds = new Integer[resources.length];
+    	mThumbIds = new Integer[resources.size()];
     	for (int value: resources) {
     		mThumbIds[i] = value;    		 
     		++i;
