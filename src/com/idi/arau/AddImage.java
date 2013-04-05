@@ -138,6 +138,10 @@ public class AddImage extends Activity {
 		
 		WordsDataSource data = WordsDataSource.getInstance(this);
 		data.addWords(words);
+		
+		// Save to Mem
+		DomainController controller = DomainController.getDomainControllerInstance(this);
+		controller.setWord(word);
 	}	
 	
 	
