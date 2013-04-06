@@ -11,14 +11,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String TABLE_WORDS = "words";
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_WORD = "word";
-	public static final String COLUMN_PICTURE = "picture";
 	public static final String COLUMN_LEVEL = "level";
 	
 	public static final String TABLE_CUSTOM = "custom";
 
 	private static final String CREATE_WORDS = "CREATE TABLE " + TABLE_WORDS
 			+ " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ COLUMN_WORD + " TEXT, " + COLUMN_PICTURE + " TEXT," + COLUMN_LEVEL + " INTEGER );";
+			+ COLUMN_WORD + " TEXT, " + COLUMN_LEVEL + " INTEGER );";
 		
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, 1);		

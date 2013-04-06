@@ -1,15 +1,18 @@
 package com.idi.arau;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 
 public class DomainController {
 
 	private static DomainController domainControllerObject;
 	private Context context;
+	private boolean sync = true;
 	private List<String> words = new ArrayList<String>();
 	private List<Integer> resources = new ArrayList<Integer>();
 	private List<Integer> levels = new ArrayList<Integer>();
@@ -19,7 +22,7 @@ public class DomainController {
 		catchData();
 	}
 	
-	public static DomainController getDomainControllerInstance(Context context) {
+	public static DomainController getInstance(Context context) {
 		if (domainControllerObject == null) {						
 			domainControllerObject = new DomainController(context);			
 		}		
@@ -27,17 +30,18 @@ public class DomainController {
 	}
 
 	private void catchData() {		
-		fillWords();		
+		fillStaticWords();
+		fillCustomWords();
 		shuffleList();		
 	}
 
-	public void addWord(String word, Integer resource, Integer level) {
+	private void addWord(String word, Integer resource, Integer level) {
 		words.add(word);
 		resources.add(resource);
-		levels.add(level);
+		levels.add(level);		
 	}
 	
-	private void fillWords() {		
+	private void fillStaticWords() {		
 
 		// Level 0
 		addWord("apple", R.drawable.apple, 0);
@@ -61,6 +65,23 @@ public class DomainController {
 		addWord("snail", R.drawable.snail, 1);
 	}
 
+	private void fillCustomWords() {
+		if (existDB()) {
+			WordsDataSource data = WordsDataSource.getInstance(context);	
+			List<ModelWord> dataFromDB = data.readAllWords();
+			for (ModelWord word: dataFromDB) {
+				addWord(word.getWord(), -1, word.getLevel());
+			}
+		}
+	}
+
+	private boolean existDB() {
+		ContextWrapper wrapper = new ContextWrapper(context);
+		File dbFile = wrapper.getDatabasePath("wordsDB.db");
+		return dbFile.exists();
+	}
+
+	
 	private void shuffleList() {
 		int n = words.size();
 		Random random = new Random();
@@ -85,11 +106,12 @@ public class DomainController {
 		levels.set(change, auxLev);
 	}
 	
-	public List<String> getWordsToPlay() {			
+	public List<String> getWordsToPlay() {
+		this.sync = true;
 		return words;
 	}
 
-	public List<Integer> getResourcesToPlay() {	
+	public List<Integer> getResourcesToPlay() {
 		return resources;
 	}
 	
@@ -101,12 +123,10 @@ public class DomainController {
 		words.add(word.getWord());
 		resources.add(word.getResource());
 		levels.add(word.getLevel());
-	}	
+		this.sync = false;
+	}
+	
+	public boolean isUpdated() {
+		return this.sync;
+	}
 }
-
-/*
-private boolean checkDBStock(ContextWrapper context, String dbName) {
-File dbFile = context.getDatabasePath(dbName);
-return dbFile.exists();
-}
-*/

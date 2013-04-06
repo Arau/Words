@@ -56,7 +56,7 @@ public class ImageAdapter extends BaseAdapter {
     }
     
     private void getImages() {    	
-		DomainController manager = DomainController.getDomainControllerInstance(mContext);
+		DomainController manager = DomainController.getInstance(mContext);
 		names  = manager.getWordsToPlay();				
     	List<Integer> resources = manager.getResourcesToPlay();
     	int i = 0;

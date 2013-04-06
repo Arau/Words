@@ -72,6 +72,7 @@ public class Game extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.level = defineLevel();
 		this.manager = ManagerGame.getInstanceManager(this);
+		this.manager.refresh();
 		initSensor();
 		manager.setLevel(this.level);
 		manager.restartIndex();
@@ -534,5 +535,5 @@ public class Game extends Activity implements OnClickListener {
 		int wordIndex = manager.getIndex();
 		if (wordIndex > 0)
 			this.manager.setIndex(wordIndex - 1);
-	}
+	}		
 }

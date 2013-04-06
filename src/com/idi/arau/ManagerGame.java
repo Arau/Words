@@ -8,6 +8,7 @@ import android.content.Context;
 public class ManagerGame {
 
 	private static ManagerGame managerObject;
+	private DomainController controller;
 	private Context context;
 	private Word[] words_level0;
 	private Word[] words_level1;
@@ -18,13 +19,11 @@ public class ManagerGame {
 	private int index0;
 	private int index1;
 	private int levelToPlay;
-	private boolean isCustom = false;
 
 	private ManagerGame(Context context) {
 		this.context = context;
-		i = 0;
-		index0 = 0;
-		index1 = 0;
+		i = 0;		
+		controller = DomainController.getInstance(context);
 		defineWords();
 	}
 	
@@ -62,20 +61,14 @@ public class ManagerGame {
 		return false;
 	}
 	
-	public boolean nextWordIsCustom() {
-				
-		
-		return isCustom;
-	}
-
-	private void defineWords() {
-		DomainController controller = DomainController.getDomainControllerInstance(context);
+	private void defineWords() {		
+		index0 = 0;
+		index1 = 0;
 		List<String> stringWords = controller.getWordsToPlay();
 		List<Integer> bmps = controller.getResourcesToPlay();
 		List<Integer> levels = controller.getLevels();
 
 		initWords(stringWords.size());
-		
 		for (String stringWord : stringWords) {
 			Word word = new Word(stringWord);
 			
@@ -100,6 +93,11 @@ public class ManagerGame {
 		bmps_level1 = new  int[length];
 	}
 
+	public void refresh() {
+		if (controller.isUpdated())
+			defineWords();		
+	}
+	
 	public void restartIndex() {
 		this.i = 0;
 	}
@@ -116,3 +114,4 @@ public class ManagerGame {
 		this.levelToPlay = level;
 	}
 }
+

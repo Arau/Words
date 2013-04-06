@@ -2,8 +2,6 @@ package com.idi.arau;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class Word {
 	String word;

@@ -130,9 +130,9 @@ public class AddImage extends Activity {
 
 	private void saveFields() {
 		saveImage();
-		
+
+		ModelWord word = new ModelWord(this.name, -1, level);
 		// Save to DB
-		ModelWord word = new ModelWord(this.name, -1, level);				
 		List<ModelWord> words = new ArrayList<ModelWord>();		
 		words.add(word);
 		
@@ -140,7 +140,7 @@ public class AddImage extends Activity {
 		data.addWords(words);
 		
 		// Save to Mem
-		DomainController controller = DomainController.getDomainControllerInstance(this);
+		DomainController controller = DomainController.getInstance(this);
 		controller.setWord(word);
 	}	
 	

@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ImageView;
 
 public class ViewGame extends SurfaceView {
 	private Context context;
@@ -174,7 +175,8 @@ public class ViewGame extends SurfaceView {
 		this.word = manager.getNextWord();
 		int resource = manager.getNextPicture();
 		if (resource == -1) {
-			
+			String path = context.getFilesDir().getPath() + '/' + this.word.getString();
+	    	this.picture = BitmapFactory.decodeFile(path);	
 		}
 		else {
 			this.picture = BitmapFactory.decodeResource(getResources(), resource);
