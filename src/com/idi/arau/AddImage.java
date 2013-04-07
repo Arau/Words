@@ -15,6 +15,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -64,6 +65,7 @@ public class AddImage extends Activity {
 				}
 			}
 		});
+		getActionBar().setHomeButtonEnabled(true);
 	} 
 
 	@Override
@@ -165,5 +167,18 @@ public class AddImage extends Activity {
 	                level = 1;
 	            break;
 	    }
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+        	case android.R.id.home:
+                Intent intent = new Intent(this, Words.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+		}
 	}
 }
