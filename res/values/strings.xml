@@ -29,11 +29,13 @@
     <string name="user_name">Name</string>
     <string name="add_user">Add user</string>
     <string name="pictures">Pictures</string>
-    <string name="gallery_title">Gallery</string>
+    <string name="plusWord">Add Image</string>
     <string name="name_word_to_add">Name</string>
     <string name="level_word_to_add">Level</string>
     <string name="select_image">Select Image</string>
     <string name="commit_word_to_add">Save</string>
     <string name="level_1">Easy</string>
     <string name="level_2">Hard</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_delete">Delete</string>
 </resources>
