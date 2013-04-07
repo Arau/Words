@@ -1,12 +1,5 @@
 package com.idi.arau;
 
-import com.idi.arau.R;
-import com.idi.arau.R.drawable;
-import com.idi.arau.R.id;
-import com.idi.arau.R.layout;
-import com.idi.arau.R.menu;
-import com.idi.arau.R.raw;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -137,7 +130,6 @@ public class Game extends Activity implements OnClickListener {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
-		// timeThread.setRunning(false);
 		return true;
 	}
 
@@ -391,6 +383,7 @@ public class Game extends Activity implements OnClickListener {
 
 	protected void playAgain() {
 		Intent i = new Intent(this, Game.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra("level", this.level);
 		startActivity(i);
 	}
