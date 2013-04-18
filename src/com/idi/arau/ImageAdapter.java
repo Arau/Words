@@ -15,7 +15,7 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<String> names;
-	private Integer[] mThumbIds;
+	private List<Integer> mThumbIds;
 
 	public ImageAdapter(Context c) {		
         mContext = c;
@@ -23,7 +23,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return mThumbIds.size();
     }
 
     public Object getItem(int position) {
@@ -32,6 +32,20 @@ public class ImageAdapter extends BaseAdapter {
 
     public long getItemId(int position) {
         return 0;
+    }
+    
+    public String getName(int position) {
+    	return names.get(position);
+    }
+    
+    public Integer getThumb(int position) {
+    	return mThumbIds.get(position);
+    }
+    
+    public void deleteItem(int position) {
+    	names.remove(position);
+    	mThumbIds.remove(position);
+    	this.notifyDataSetChanged();
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -46,11 +60,11 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }                        
     
-        if (mThumbIds[position] == -1) { 
+        if (mThumbIds.get(position) == -1) { 
         	setImgFromDecodedFile(imageView, names.get(position)); 
         }        	        	        
         else {
-        	imageView.setImageResource(mThumbIds[position]);
+        	imageView.setImageResource(mThumbIds.get(position));
         }
         return imageView;
     }
@@ -58,13 +72,7 @@ public class ImageAdapter extends BaseAdapter {
     private void getImages() {    	
 		DomainController manager = DomainController.getInstance(mContext);
 		names  = manager.getWordsToPlay();				
-    	List<Integer> resources = manager.getResourcesToPlay();
-    	int i = 0;
-    	mThumbIds = new Integer[resources.size()];
-    	for (int value: resources) {
-    		mThumbIds[i] = value;    		 
-    		++i;
-    	}    	
+    	mThumbIds = manager.getResourcesToPlay();
     }   
     
     private void setImgFromDecodedFile(ImageView imageView, String fileName) {
