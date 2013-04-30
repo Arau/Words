@@ -59,10 +59,11 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }                        
-    
+        
+        // Image taken from device
         if (mThumbIds.get(position) == -1) { 
         	setImgFromDecodedFile(imageView, names.get(position)); 
-        }        	        	        
+        }     
         else {
         	imageView.setImageResource(mThumbIds.get(position));
         }

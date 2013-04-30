@@ -3,5 +3,6 @@
     <color name="white_text">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="red_bar">#990000</color>   
-    <color name="background_main">#FEFFFFDD</color>      
+    <color name="background_main">#FEFFFFDD</color>
+    <color name="blue">#0000FF</color>           
 </resources>
