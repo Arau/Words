@@ -16,7 +16,8 @@ public class WordsDataSource {
 			DatabaseHelper.COLUMN_WORD, DatabaseHelper.COLUMN_LEVEL};
 
 	private WordsDataSource(Context context) {
-		dbHelper = new DatabaseHelper(context);
+		DbProvider provider = DbProvider.getInstance(context);
+		dbHelper = provider.getDatabaseHelper();
 	}	
 	
 	public static WordsDataSource getInstance(Context context) {
