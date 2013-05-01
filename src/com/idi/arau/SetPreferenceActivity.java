@@ -11,5 +11,6 @@ public class SetPreferenceActivity extends Activity {
 		super.onCreate(savedInstanceState);	  
 		getFragmentManager().beginTransaction().replace(android.R.id.content, 
 				new PrefsFragment()).commit();
+		getActionBar().setHomeButtonEnabled(true);
 	 }
 }
