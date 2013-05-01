@@ -20,7 +20,53 @@
                 android:layout_height="match_parent"
                 android:text="@string/gameOver"
                 android:textColor="@color/white_text"
-                android:textSize="34dp" />
+                android:textSize="34sp" />
+            
+            <LinearLayout 
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                
+	             <TextView
+	                android:id="@+id/pointsString"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"
+	                android:text="@string/points"
+	                android:textColor="@color/white_text"
+	                android:textSize="22sp" />
+             
+	             
+	             <TextView
+	                android:id="@+id/points"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"	                
+	                android:textColor="@color/white_text"
+	                android:textSize="22sp" />
+             
+             </LinearLayout>
+            
+            <LinearLayout 
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                
+		         <TextView
+	                android:id="@+id/userString"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"
+	                android:text="@string/user"
+	                android:textColor="@color/white_text"
+	                android:textSize="22sp" />
+
+		         
+	             <EditText
+	                android:id="@+id/username"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"	                
+	                android:textSize="22sp" />
+             
+             </LinearLayout>
+             
 
         </LinearLayout>
 
@@ -30,24 +76,12 @@
             android:gravity="center"
             android:paddingTop="30dp" >
 
-            <LinearLayout
+            <Button
+                android:id="@+id/accept"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center" >
+                android:layout_height="wrap_content"
+                android:text="@string/accept" />
 
-                <Button
-                    android:id="@+id/playAgain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playAgain" />
-
-                <Button
-                    android:id="@+id/goStart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/goStart" />
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

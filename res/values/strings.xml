@@ -8,6 +8,10 @@
     <string name="gameOver">Game Over </string>
     <string name="playAgain">Play Again </string>
     <string name="goStart">Go to Start </string>
+    <string name="accept">Accept </string>
+    <string name="score">Score </string>
+    <string name="user">Introduce Name </string>
+    <string name="points">Points: </string>
     <string name="finishGame"> Finish Game </string>
     <string name="preferences"> Preferences </string>
     <string name="help_label">Help</string>
