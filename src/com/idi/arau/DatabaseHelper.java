@@ -13,11 +13,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_WORD = "word";
 	public static final String COLUMN_LEVEL = "level";
 	
-	public static final String TABLE_CUSTOM = "custom";
-
+	private static final String CREATE_USERS = "CREATE TABLE users (username TEXT, score INTEGER);";
+	
 	private static final String CREATE_WORDS = "CREATE TABLE " + TABLE_WORDS
 			+ " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ COLUMN_WORD + " TEXT, " + COLUMN_LEVEL + " INTEGER );";
+			+ COLUMN_WORD + " TEXT, " + COLUMN_LEVEL + " INTEGER );";		
 		
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, 1);		
@@ -25,7 +25,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_WORDS);		
+		db.execSQL(CREATE_WORDS);
+		db.execSQL(CREATE_USERS);
 	}
 
 	@Override
@@ -33,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		android.util.Log.v("Words",
 				"Upgrading database, which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS words");
+		db.execSQL("DROP TABLE IF EXISTS users");
 		onCreate(db);
 	}
 }
