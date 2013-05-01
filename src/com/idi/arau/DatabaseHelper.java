@@ -8,9 +8,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "wordsDB.db";
 
-	public static final String TABLE_WORDS = "words";
-	public static final String COLUMN_ID = "_id";
-	public static final String COLUMN_WORD = "word";
+	public static final String TABLE_USERS  = "users";
+	public static final String COLUMN_USER  = "username";
+	public static final String COLUMN_SCORE = "score";
+	
+	public static final String TABLE_WORDS  = "words";
+	public static final String COLUMN_ID    = "_id";
+	public static final String COLUMN_WORD  = "word";
 	public static final String COLUMN_LEVEL = "level";
 	
 	private static final String CREATE_USERS = "CREATE TABLE users (username TEXT, score INTEGER);";

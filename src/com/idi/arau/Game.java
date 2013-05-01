@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -140,22 +141,10 @@ public class Game extends Activity implements OnClickListener {
 
 		switch (id) {
 		case DIALOG_GAMEOVER_ID:
-			dialog.setContentView(R.layout.game_over_dialog);
-			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
-			playAgain.setOnClickListener(this);
-			Button goStart = (Button) dialog.findViewById(R.id.goStart);
-			dialog.setCancelable(false);
-			goStart.setOnClickListener(this);
-			gameOverDialog = dialog;
+			showScore(dialog);
 			break;
 		case DIALOG_FINISH_GAME:
-			dialog.setContentView(R.layout.finish_game_dialog);
-			Button playAgn = (Button) dialog.findViewById(R.id.playAgn);
-			playAgn.setOnClickListener(this);
-			Button goStrt = (Button) dialog.findViewById(R.id.goStrt);
-			dialog.setCancelable(false);
-			goStrt.setOnClickListener(this);
-			finishDialog = dialog;
+			showScore(dialog);
 			break;
 		case DIALOG_HELP:
 			dialog.setContentView(R.layout.help_dialog);
@@ -208,29 +197,13 @@ public class Game extends Activity implements OnClickListener {
 	// IMPLEMENT onClick Dialog buttons
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.playAgain:
-			dismiss(gameOverDialog);
-			playAgain();
-			break;
-		case R.id.goStart:
-			dismiss(gameOverDialog);
-			goToStart();
-			break;
-		case R.id.playAgn:
-			dismiss(finishDialog);
-			playAgain();
-			break;
-		case R.id.goStrt:
-			dismiss(finishDialog);
-			goToStart();
-			break;
+		switch (v.getId()) {		
 		case R.id.exitHelp:
 			// pause game
 			dismiss(helpDialog);
 			// play game
 			break;
-		default:
+		default:			
 			finish();
 		}
 	}
@@ -529,4 +502,42 @@ public class Game extends Activity implements OnClickListener {
 		if (wordIndex > 0)
 			this.manager.setIndex(wordIndex - 1);
 	}		
+	
+	private void showScore(final Dialog dialog) {
+		dialog.setContentView(R.layout.finish_game_dialog);
+		dialog.setTitle("Score");
+		dialog.setCancelable(false);
+		
+		Button goStrt = (Button) dialog.findViewById(R.id.accept);
+		goStrt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				//Save data
+				EditText userInput = (EditText) dialog.findViewById(R.id.username);
+				CharSequence username = userInput.getText();
+				
+				TextView pointsInput = (TextView) dialog.findViewById(R.id.points);
+				CharSequence pointsSentence = pointsInput.getText();
+				String[] chunks = pointsSentence.toString().split(" ");
+				int points = Integer.parseInt(chunks[0]);
+								
+				saveMaxScore(username, points);
+				
+				// Go main activity
+				finish();
+				
+			}
+			
+			private void saveMaxScore(CharSequence username, int score) {
+				UserController userController = UserController.getInstance(Game.this);
+				int maxScore = userController.getMaxScore(username.toString());
+				
+				if (maxScore < score)
+					userController.setMaxScore(username.toString(), score);
+			}
+			
+		});
+		finishDialog = dialog;
+	}
 }
