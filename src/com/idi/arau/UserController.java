@@ -1,5 +1,8 @@
 package com.idi.arau;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -40,11 +43,33 @@ public class UserController {
 		db.close();
 	}
 	
+	public Map<String, Integer> getRanking() {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Map<String, Integer> ranking = new HashMap<String, Integer>();
+		try {
+			Cursor cursor = db.rawQuery(
+					"SELECT username, score " +
+					"FROM users " +
+					"ORDER BY score DESC", 
+							new String[]{});
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				ranking.put(cursor.getString(0), cursor.getInt(1));
+				cursor.moveToNext();
+			}
+			cursor.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		db.close();
+		return ranking;
+	}
+	
 	private void getDatabaseScore(String username) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		
 		try {			
-			Cursor cursor = db.rawQuery("SELECT score WHERE username = ?", new String[] {username}); 
+			Cursor cursor = db.rawQuery("SELECT score FROM users WHERE username = ?", new String[] {username}); 
 			cursor.moveToFirst();
 			this.score = cursor.getInt(0);
 			cursor.close();
