@@ -32,6 +32,7 @@
     <string name="title_activity_user">UserActivity</string>
     <string name="user_name">Name</string>
     <string name="add_user">Add user</string>
+    <string name="deleteUser">Delete user</string>
     <string name="pictures">Pictures</string>
     <string name="plusWord">Add Image</string>
     <string name="name_word_to_add">Name</string>
