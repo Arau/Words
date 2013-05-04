@@ -1,6 +1,6 @@
 package com.idi.arau;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.content.ContentValues;
@@ -17,7 +17,7 @@ public class UserController {
 	private UserController(Context context) {
 		DbProvider provider = DbProvider.getInstance(context);
 		dbHelper = provider.getDatabaseHelper();
-		info = new HashMap<String, Integer>();
+		info = new LinkedHashMap<String, Integer>();
 	}
 	
 	public static UserController getInstance(Context context) {
