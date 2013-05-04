@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.idi.arau.R;
-import com.idi.arau.R.drawable;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +12,6 @@ import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageView;
 
 public class ViewGame extends SurfaceView {
 	private Context context;
@@ -121,7 +117,7 @@ public class ViewGame extends SurfaceView {
 		canvas.drawBitmap(this.picture, sizeX, sizeY, null);
 		drawLetters(canvas);
 		String touchedString = letterArrayToString(touchedLetters);
-		word.drawTouchedLetters(canvas, touchedString, this.getWidth(),
+		word.drawTouchedLetters(context, canvas, touchedString, this.getWidth(),
 				this.getHeight(), this.word.getString().length());
 	}
 

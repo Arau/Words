@@ -1,7 +1,9 @@
 package com.idi.arau;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 
 public class Word {
 	String word;
@@ -11,13 +13,16 @@ public class Word {
 		this.word = word;
 	}
 	
-	public void drawTouchedLetters(Canvas canvas, String touchedLetters, int width, int height, int wordLength){		
+	public void drawTouchedLetters(Context context, Canvas canvas, String touchedLetters, int width, int height, int wordLength){		
 		int xPos = width/3;  
 		if(wordLength > 4 && wordLength <= 7) xPos = width/4;
-		else if (wordLength > 7) xPos = width/8;
+		else if (wordLength > 7) xPos = width/6;
 		int yPos = (5*height)/6;
-		Paint paint = new Paint();		
+		
+		Paint paint = new Paint();	
 		paint.setTextSize(35);
+		Typeface font = Typeface.createFromAsset(context.getAssets(), "gloriahallelujah.ttf");
+		paint.setTypeface(font);
 		paint.setStrokeWidth(3);
 		if (width > 300 && height > 300) paint.setTextSize(50); 		
 		canvas.drawText(touchedLetters,xPos,yPos,paint);	

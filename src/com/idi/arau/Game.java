@@ -392,10 +392,8 @@ public class Game extends Activity implements OnClickListener {
 		popup.setContentView(layout);
 		popup.setFocusable(true);
 
-		Typeface font = Typeface.createFromAsset(getAssets(),
-				"gloriahallelujah.ttf");
-		TextView txt = (TextView) popup.getContentView().findViewById(
-				R.id.solution);
+		Typeface font = Typeface.createFromAsset(getAssets(), "gloriahallelujah.ttf");
+		TextView txt = (TextView) popup.getContentView().findViewById(R.id.solution);
 		txt.setTypeface(font);
 
 		String word = this.view.getStringCurrentWord();
