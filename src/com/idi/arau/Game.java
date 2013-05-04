@@ -1,5 +1,7 @@
 package com.idi.arau;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,7 +14,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -111,9 +112,9 @@ public class Game extends Activity implements OnClickListener {
 		super.onResume();
 
 		definePrefs();		
-		
 		toggleMusic();
 		fixWordIndex();
+
 		mSensorManager.registerListener(mSensorListener,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_UI);
@@ -279,11 +280,7 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void gameOver() {
-			int aux = 0;
-			int score = pref.getInt("score", aux);
-			score -= 1000;
-			Log.v("Game",  ""+ score);
-			pref.edit().putInt("score", score).commit();
+			subtractScore();
 			
 			if (pref.getBoolean("answer", true)) {
 				showSolution();
@@ -509,6 +506,15 @@ public class Game extends Activity implements OnClickListener {
 		if (wordIndex > 0)
 			this.manager.setIndex(wordIndex - 1);
 	}		
+	
+	private void subtractScore() {
+		int aux = 0;
+		int score = pref.getInt("score", aux);
+		Random rand = new Random();			
+		int num = rand.nextInt(1000 - 900 + 1) + 900;
+		score -= num;
+		pref.edit().putInt("score", score).commit();
+	}
 	
 	private void definePrefs() {
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
