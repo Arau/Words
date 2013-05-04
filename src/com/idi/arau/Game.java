@@ -531,10 +531,7 @@ public class Game extends Activity implements OnClickListener {
 			
 			private void saveMaxScore(CharSequence username, int score) {
 				UserController userController = UserController.getInstance(Game.this);
-				int maxScore = userController.getMaxScore(username.toString());
-				
-				if (maxScore < score)
-					userController.setMaxScore(username.toString(), score);
+				userController.setMaxScore(username.toString(), score);
 			}
 			
 		});

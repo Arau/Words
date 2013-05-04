@@ -8,31 +8,50 @@ import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+
 
 public class UserActivity extends ListActivity {
+	
+	private ActionMode mActionMode;
+	static ArrayAdapter<String> adapter;
+	static List<String> values;
+	static int position;
+	
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		defineActionBar();
 		
-		List<String> values = getListOfItems();
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				R.layout.row_layout, R.id.score, values);
+		values = getListOfItems();
+		adapter = new ArrayAdapter<String>(this,
+				R.layout.row_layout, R.id.user, values);
 		setListAdapter(adapter);
+		
+		this.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int index, long id) {
+				
+				position = index;
+				if (mActionMode != null) {
+					  return false;
+				}
+				// Start the CAB using the ActionMode.Callback defined above
+				mActionMode = UserActivity.this.startActionMode(mActionModeCallback);				
+				view.setSelected(true);
+				return true;
+			}
+		});
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		String item = (String) getListAdapter().getItem(position);
-		Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-	}
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
@@ -65,9 +84,57 @@ public class UserActivity extends ListActivity {
 		List<String> values = new ArrayList<String>();
 		int index = 1;
 		for (String key : userScore.keySet()) {
-			values.add(index + "  " + key + "\t\t\t\t" + userScore.get(key) + " points");
+			values.add(index + "  " + key + " \t\t\t\t" + userScore.get(key) + " points");
 			index++;
 		}
 		return values;
 	}
+	
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+		// Called when the action mode is created; startActionMode() was called
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// Inflate a menu resource providing context menu items
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.context_useractivity_menu, menu);
+			return true;
+		}
+
+		// Called each time the action mode is shown. Always called after onCreateActionMode, but
+		// may be called multiple times if the mode is invalidated.
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false; // Return false if nothing is done
+		}
+
+		// Called when the user selects a contextual menu item
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+			case R.id.delete_user:
+				
+				deleteUser();
+				mode.finish(); // close the CAB
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		// Called when the user exits the action mode
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode = null;
+		}
+		
+		private void deleteUser() {			
+			String[] item = values.get(position).split("\\s+");
+			String user = item[1];
+			UserController controller = UserController.getInstance(UserActivity.this);
+			controller.deleteUser(user);
+			values.remove(position);
+			adapter.notifyDataSetChanged();
+		}
+	};
 } 
