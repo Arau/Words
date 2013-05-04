@@ -4,6 +4,8 @@
     <string name="app_name">Words</string>
     <string name="easy">Easy</string>
     <string name="hard">Hard</string>
+    <string name="ranking">Ranking</string>
+    <string name="images">Images</string>
     <string name="dataBaseName">wordsDB.db</string>
     <string name="gameOver">Game Over </string>
     <string name="playAgain">Play Again </string>

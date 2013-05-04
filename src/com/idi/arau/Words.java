@@ -39,23 +39,24 @@ public class Words extends Activity {
 			}
 		});
 
-		button = (Button) findViewById(R.id.preferences);
-		button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				goPreferences();
-			}
-		});
 		
-		button = (Button) findViewById(R.id.userButton);
+		button = (Button) findViewById(R.id.images);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
 				goGallery();
 			}
-		});	
+		});
+		
+		button = (Button) findViewById(R.id.ranking);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				goUsers();
+			}
+		});
 
 	}
 
@@ -75,7 +76,7 @@ public class Words extends Activity {
 		startActivity(i);
 	}
 	
-	protected void goCreateUser() {
+	protected void goUsers() {
 		Intent i = new Intent(this, UserActivity.class);
 		startActivity(i);		
 	}
@@ -101,7 +102,7 @@ public class Words extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.addUser:
-			goCreateUser();
+			goUsers();
 			return true;
 		case R.id.pictures:
 			goGallery();
