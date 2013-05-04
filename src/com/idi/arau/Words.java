@@ -2,6 +2,7 @@ package com.idi.arau;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Words extends Activity {
 	private Button button;
@@ -23,7 +25,12 @@ public class Words extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
+		Typeface font = Typeface.createFromAsset(getAssets(),
+				"gloriahallelujah.ttf");
+		
+		
 		button = (Button) findViewById(R.id.easy);
+		button.setTypeface(font);
 		button.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
@@ -32,6 +39,7 @@ public class Words extends Activity {
 		});
 
 		button = (Button) findViewById(R.id.hard);
+		button.setTypeface(font);
 		button.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View view) {
@@ -41,6 +49,7 @@ public class Words extends Activity {
 
 		
 		button = (Button) findViewById(R.id.images);
+		button.setTypeface(font);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -50,6 +59,7 @@ public class Words extends Activity {
 		});
 		
 		button = (Button) findViewById(R.id.ranking);
+		button.setTypeface(font);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -58,6 +68,25 @@ public class Words extends Activity {
 			}
 		});
 
+		button = (Button) findViewById(R.id.prefs);
+		button.setTypeface(font);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				goPreferences();
+			}
+		});
+		
+		button = (Button) findViewById(R.id.help);
+		button.setTypeface(font);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				goHelp();
+			}
+		});
 	}
 
 	@Override
@@ -87,8 +116,8 @@ public class Words extends Activity {
 	}
 	
 	protected void goHelp() {
-		Intent i = new Intent(this, UserActivity.class);
-		startActivity(i);		
+		//Intent i = new Intent(this, Help.class);
+		//startActivity(i);		
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
