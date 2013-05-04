@@ -1,5 +1,7 @@
 package com.idi.arau;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -107,12 +110,15 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+		definePrefs();		
 		toggleMusic();
 		fixWordIndex();
+
 		mSensorManager.registerListener(mSensorListener,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_UI);
+		
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
 		layout.addView(timeBar);
@@ -121,9 +127,6 @@ public class Game extends Activity implements OnClickListener {
 		setContentView(layout);
 		timeInit(timeBar);
 		view.setTimeThread(timeThread, timePerWord);
-		//
-		// String s = "musica: " + pref.getBoolean("music", true);
-		// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,22 +143,10 @@ public class Game extends Activity implements OnClickListener {
 
 		switch (id) {
 		case DIALOG_GAMEOVER_ID:
-			dialog.setContentView(R.layout.game_over_dialog);
-			Button playAgain = (Button) dialog.findViewById(R.id.playAgain);
-			playAgain.setOnClickListener(this);
-			Button goStart = (Button) dialog.findViewById(R.id.goStart);
-			dialog.setCancelable(false);
-			goStart.setOnClickListener(this);
-			gameOverDialog = dialog;
+			showScore(dialog);
 			break;
 		case DIALOG_FINISH_GAME:
-			dialog.setContentView(R.layout.finish_game_dialog);
-			Button playAgn = (Button) dialog.findViewById(R.id.playAgn);
-			playAgn.setOnClickListener(this);
-			Button goStrt = (Button) dialog.findViewById(R.id.goStrt);
-			dialog.setCancelable(false);
-			goStrt.setOnClickListener(this);
-			finishDialog = dialog;
+			showScore(dialog);
 			break;
 		case DIALOG_HELP:
 			dialog.setContentView(R.layout.help_dialog);
@@ -208,29 +199,13 @@ public class Game extends Activity implements OnClickListener {
 	// IMPLEMENT onClick Dialog buttons
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.playAgain:
-			dismiss(gameOverDialog);
-			playAgain();
-			break;
-		case R.id.goStart:
-			dismiss(gameOverDialog);
-			goToStart();
-			break;
-		case R.id.playAgn:
-			dismiss(finishDialog);
-			playAgain();
-			break;
-		case R.id.goStrt:
-			dismiss(finishDialog);
-			goToStart();
-			break;
+		switch (v.getId()) {		
 		case R.id.exitHelp:
 			// pause game
 			dismiss(helpDialog);
 			// play game
 			break;
-		default:
+		default:			
 			finish();
 		}
 	}
@@ -305,6 +280,8 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void gameOver() {
+			subtractScore();
+			
 			if (pref.getBoolean("answer", true)) {
 				showSolution();
 			} else
@@ -529,4 +506,55 @@ public class Game extends Activity implements OnClickListener {
 		if (wordIndex > 0)
 			this.manager.setIndex(wordIndex - 1);
 	}		
+	
+	private void subtractScore() {
+		int aux = 0;
+		int score = pref.getInt("score", aux);
+		Random rand = new Random();			
+		int num = rand.nextInt(1000 - 900 + 1) + 900;
+		score -= num;
+		pref.edit().putInt("score", score).commit();
+	}
+	
+	private void definePrefs() {
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		int maxScore = this.manager.getWordsLength(level) * 1000;
+		pref.edit().putInt("score", maxScore).commit();
+	}
+	
+	private void showScore(final Dialog dialog) {
+		dialog.setContentView(R.layout.finish_game_dialog);
+		dialog.setTitle("Score");
+		dialog.setCancelable(false);
+		
+		int aux = 0;
+		final int score = pref.getInt("score", aux);
+		
+		TextView pointsText = (TextView) dialog.findViewById(R.id.points);
+		pointsText.setText("" + score);
+		
+		Button goStrt = (Button) dialog.findViewById(R.id.accept);
+		goStrt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				//Save data
+				EditText userInput = (EditText) dialog.findViewById(R.id.username);
+				CharSequence username = userInput.getText();
+								
+				saveMaxScore(username, score);
+				
+				// Go main activity
+				finish();
+				
+			}
+			
+			private void saveMaxScore(CharSequence username, int score) {
+				UserController userController = UserController.getInstance(Game.this);
+				userController.setMaxScore(username.toString(), score);
+			}
+			
+		});
+		finishDialog = dialog;
+	}
 }

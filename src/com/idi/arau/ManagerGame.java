@@ -82,8 +82,7 @@ public class ManagerGame {
 				bmps_level1[index1] = bmps.get(index0 + index1);
 				++index1;
 			}			
-		}
-		
+		}		
 	}
 
 	private void initWords(int length) {
@@ -113,5 +112,8 @@ public class ManagerGame {
 	public void setLevel(int level) {
 		this.levelToPlay = level;
 	}
+	
+	public int getWordsLength(int level) {
+		return (level == 0) ? index0 : index1;
+	}
 }
-

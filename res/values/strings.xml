@@ -4,10 +4,16 @@
     <string name="app_name">Words</string>
     <string name="easy">Easy</string>
     <string name="hard">Hard</string>
+    <string name="ranking">Ranking</string>
+    <string name="images">Images</string>
     <string name="dataBaseName">wordsDB.db</string>
     <string name="gameOver">Game Over </string>
     <string name="playAgain">Play Again </string>
     <string name="goStart">Go to Start </string>
+    <string name="accept">Accept </string>
+    <string name="score">Score </string>
+    <string name="user">Introduce Name </string>
+    <string name="points">Points: </string>
     <string name="finishGame"> Finish Game </string>
     <string name="preferences"> Preferences </string>
     <string name="help_label">Help</string>
@@ -28,6 +34,7 @@
     <string name="title_activity_user">UserActivity</string>
     <string name="user_name">Name</string>
     <string name="add_user">Add user</string>
+    <string name="deleteUser">Delete user</string>
     <string name="pictures">Pictures</string>
     <string name="plusWord">Add Image</string>
     <string name="name_word_to_add">Name</string>

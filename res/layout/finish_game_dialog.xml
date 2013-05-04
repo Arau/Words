@@ -9,21 +9,34 @@
         android:gravity="center"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/points"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"            
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" >
+            android:gravity="center"
+            android:paddingTop="22sp"
+            android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/dialogTextFinishGame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top|right"
-                android:paddingLeft="60dp"
-                android:paddingTop="0dp"
-                android:text="@string/finishGame"
+                android:id="@+id/userString"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/user"
                 android:textColor="@color/black"
-                android:textSize="27dp" />
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -32,26 +45,12 @@
             android:gravity="center"
             android:paddingTop="30dp" >
 
-            <LinearLayout
+            <Button
+                android:id="@+id/accept"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center" >
-
-                <Button
-                    android:id="@+id/playAgn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/playAgain" />
-
-                <Button
-                    android:id="@+id/goStrt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/goStart" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:text="@string/accept" />
         </LinearLayout>
-        
     </LinearLayout>
-    
 
 </RelativeLayout>
