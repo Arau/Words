@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -108,12 +109,15 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+		definePrefs();		
+		
 		toggleMusic();
 		fixWordIndex();
 		mSensorManager.registerListener(mSensorListener,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_UI);
+		
 		layout = defineLayout();
 		this.timeBar = defineProgressTimeBar();
 		layout.addView(timeBar);
@@ -122,9 +126,6 @@ public class Game extends Activity implements OnClickListener {
 		setContentView(layout);
 		timeInit(timeBar);
 		view.setTimeThread(timeThread, timePerWord);
-		//
-		// String s = "musica: " + pref.getBoolean("music", true);
-		// Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -278,6 +279,12 @@ public class Game extends Activity implements OnClickListener {
 
 		@Override
 		public void gameOver() {
+			int aux = 0;
+			int score = pref.getInt("score", aux);
+			score -= 1000;
+			Log.v("Game",  ""+ score);
+			pref.edit().putInt("score", score).commit();
+			
 			if (pref.getBoolean("answer", true)) {
 				showSolution();
 			} else
@@ -503,10 +510,22 @@ public class Game extends Activity implements OnClickListener {
 			this.manager.setIndex(wordIndex - 1);
 	}		
 	
+	private void definePrefs() {
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		int maxScore = this.manager.getWordsLength(level) * 1000;
+		pref.edit().putInt("score", maxScore).commit();
+	}
+	
 	private void showScore(final Dialog dialog) {
 		dialog.setContentView(R.layout.finish_game_dialog);
 		dialog.setTitle("Score");
 		dialog.setCancelable(false);
+		
+		int aux = 0;
+		final int score = pref.getInt("score", aux);
+		
+		TextView pointsText = (TextView) dialog.findViewById(R.id.points);
+		pointsText.setText("" + score);
 		
 		Button goStrt = (Button) dialog.findViewById(R.id.accept);
 		goStrt.setOnClickListener(new OnClickListener() {
@@ -516,13 +535,8 @@ public class Game extends Activity implements OnClickListener {
 				//Save data
 				EditText userInput = (EditText) dialog.findViewById(R.id.username);
 				CharSequence username = userInput.getText();
-				
-				TextView pointsInput = (TextView) dialog.findViewById(R.id.points);
-				CharSequence pointsSentence = pointsInput.getText();
-				String[] chunks = pointsSentence.toString().split(" ");
-				int points = Integer.parseInt(chunks[0]);
 								
-				saveMaxScore(username, points);
+				saveMaxScore(username, score);
 				
 				// Go main activity
 				finish();
