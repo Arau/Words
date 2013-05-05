@@ -1,8 +1,10 @@
 package com.idi.arau;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -90,7 +92,7 @@ public class Gallery extends Activity {
 						float distanceY = getDistance(initEventY, event.getY());
 																		
 						if (distanceX > 200 || distanceY > 370) {
-							deleteImage(position);							
+							alertDialog(position);
 						}
 						v.invalidate();						
 						ret = true;
@@ -123,6 +125,30 @@ public class Gallery extends Activity {
 			private void deleteImage(int position) {
 				//Delete from grid view and implicitly from words list.				
 				adapter.deleteItem(position);																
+			}
+			
+			private void alertDialog(final int position) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(Gallery.this);
+				builder.setTitle("Are you sure to delete?");
+				builder.setCancelable(true);
+
+				builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int id) {
+						deleteImage(position);
+						Toast.makeText(Gallery.this, "Deleted", Toast.LENGTH_SHORT).show();
+					}
+				});
+				
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});				
+				
+				AlertDialog alertDialog = builder.create();
+				alertDialog.show();
 			}
 			
 			private float getDistance(float a, float b) {

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 
 public class UserActivity extends ListActivity {
@@ -111,8 +114,7 @@ public class UserActivity extends ListActivity {
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
 			case R.id.delete_user:
-				
-				deleteUser();
+				alertDialog();
 				mode.finish(); // close the CAB
 				return true;
 			default:
@@ -123,6 +125,30 @@ public class UserActivity extends ListActivity {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mActionMode = null;
+		}
+		
+		private void alertDialog() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(UserActivity.this);
+			builder.setTitle("Are you sure to delete?");
+			builder.setCancelable(true);
+
+			builder.setPositiveButton(R.string.delete,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					deleteUser();
+					Toast.makeText(UserActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+				}
+			});
+			
+			builder.setNegativeButton(R.string.cancel,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});				
+			
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
 		}
 		
 		private void deleteUser() {			

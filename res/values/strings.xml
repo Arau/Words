@@ -40,4 +40,7 @@
     <string name="level_2">Hard</string>
     <string name="menu_save">Save</string>
     <string name="menu_delete">Drag and drop image to delete</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="alertDelete">Are you sure to delete?</string>
 </resources>
