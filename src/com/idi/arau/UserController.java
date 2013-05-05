@@ -1,12 +1,17 @@
 package com.idi.arau;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class UserController {
 	
@@ -50,13 +55,14 @@ public class UserController {
 		
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
-			if (score == -1) {
-				db.insert(DatabaseHelper.TABLE_USERS, null, values);
-				this.info.put(user, score);
-			}
-			else if (score < points) { 
-				db.update(DatabaseHelper.TABLE_USERS, values, "username=?", new String[] {user});
-				this.info.put(user, score);
+			if (score < points) {
+				if (score == -1)
+					db.insert(DatabaseHelper.TABLE_USERS, null, values);
+				else 
+					db.update(DatabaseHelper.TABLE_USERS, values, "username=?", new String[] {user});
+
+				this.info.put(user, points);
+				orderInfo();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,5 +117,20 @@ public class UserController {
 		}
 		db.close();
 		return score;
+	}
+	
+	private void orderInfo() {
+		List<Map.Entry<String, Integer>> orderedList = new ArrayList<Map.Entry<String, Integer>>(this.info.entrySet());				
+		Collections.sort(orderedList, new Comparator<Map.Entry<String, Integer>>() {
+			
+			public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
+				return b.getValue().compareTo(a.getValue());
+			}
+		});
+		
+		this.info.clear();
+		for(Map.Entry<String, Integer> entry: orderedList) {
+			this.info.put(entry.getKey(), entry.getValue());
+		}
 	}
 }
