@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +39,6 @@ public class Game extends Activity implements OnClickListener {
 	private static final int DIALOG_FINISH_GAME = 2;
 	private static final int DIALOG_HELP = 3;
 
-	private ProgressBar timeBar;
 	private LinearLayout layout;
 
 	private ViewGame view;
@@ -226,6 +224,11 @@ public class Game extends Activity implements OnClickListener {
 				showSolution();
 			} else
 				showGameOverDialog();
+		}
+		
+		@Override
+		public void inflateMenu() {			
+			openOptionsMenu();
 		}
 	};
 

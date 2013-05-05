@@ -58,6 +58,7 @@ public class ViewGame extends SurfaceView {
 				} else {
 					if (event.getEventTime() - event.getDownTime() > 1000) { 
 						pauseThreads();
+						viewToGame.inflateMenu();
 					}
 				}
 				letterTouched(event);

@@ -12,8 +12,4 @@
     <item android:id="@+id/toggle_music" 
         android:title="@string/toggle_music"
         />
-    
-    <item android:id="@+id/help" 
-        android:title="@string/help_label"
-        />
 </menu>
