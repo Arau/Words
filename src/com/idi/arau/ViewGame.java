@@ -27,8 +27,6 @@ public class ViewGame extends SurfaceView {
 	private GameLoopThread gameLoopThread;
 	private int maxSpeed;
 	private long lastClick = 0;
-	private TimeThread timeThread;
-	private int maxTimeValue;
 
 	private ViewToGame viewToGame;
 	private boolean isPaused;
@@ -74,11 +72,6 @@ public class ViewGame extends SurfaceView {
 	
 	public void setWord(String stringWord) {
 		this.word = new Word(stringWord);
-	}
-
-	public void setTimeThread(TimeThread timeThread, int maxValue) {
-		this.timeThread = timeThread;
-		this.maxTimeValue = maxValue;
 	}
 
 	public void setGameRunning(boolean run) {
@@ -142,12 +135,12 @@ public class ViewGame extends SurfaceView {
 	}
 
 	private void startNextWord() {
+		pauseThreads();
 		viewToGame.resetView();
 	}
 
 	private void pauseThreads() {
 		isPaused = true;
-		viewToGame.killOldThread();
 		if (gameLoopThread != null) {
 			killGameThread();
 		}
@@ -155,7 +148,6 @@ public class ViewGame extends SurfaceView {
 
 	private void playThreads() {
 		if (isPaused) {
-			viewToGame.restartTime();
 			restartGameLoopThread();
 			isPaused = false;
 		}
@@ -177,11 +169,6 @@ public class ViewGame extends SurfaceView {
 		else {
 			this.picture = BitmapFactory.decodeResource(getResources(), resource);
 		}
-	}
-
-	private void restartTimeThread() {
-		viewToGame.killOldThread();
-		viewToGame.restartTime();
 	}
 
 	private void defineDrawablesWord() {

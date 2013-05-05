@@ -34,17 +34,11 @@ import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
-	private TimeThread timeThread;
 	private ManagerGame manager;
 
 	private static final int DIALOG_GAMEOVER_ID = 1;
 	private static final int DIALOG_FINISH_GAME = 2;
 	private static final int DIALOG_HELP = 3;
-	private int timePerWord;
-
-	private Dialog gameOverDialog = null;
-	private Dialog finishDialog = null;
-	private Dialog helpDialog = null;
 
 	private ProgressBar timeBar;
 	private LinearLayout layout;
@@ -101,7 +95,6 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		killTimeThread();
 		view.killGameThread();
 		view = null;
 		mSensorManager.unregisterListener(mSensorListener);
@@ -121,13 +114,9 @@ public class Game extends Activity implements OnClickListener {
 				SensorManager.SENSOR_DELAY_UI);
 		
 		layout = defineLayout();
-		this.timeBar = defineProgressTimeBar();
-		layout.addView(timeBar);
 		view = new ViewGame(this, viewToGame);
 		layout.addView(view);
 		setContentView(layout);
-		timeInit(timeBar);
-		view.setTimeThread(timeThread, timePerWord);
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -202,25 +191,6 @@ public class Game extends Activity implements OnClickListener {
 	// /////////////////////////////////////////////////////////////////////////////
 	// /// PUBLIC
 
-	public void timeInit(ProgressBar timeBar) {
-		if (this.level == 1)
-			timePerWord = 40;
-		else
-			timePerWord = 25;
-		timeThread = new TimeThread(this, timeBar, timePerWord);
-		timeThread.setRunning(true);
-		timeThread.start();
-	}
-
-	public void onTimeOut() {
-		if (timeThread.isTimeOut()) {
-			if (pref.getBoolean("answer", true)) {
-				this.runOnUiThread(showSolutionPopUp);
-			} else
-				this.runOnUiThread(showGameOverDialog);
-		}
-	}
-
 	public void toggleMusic() {
 		if (musicShouldBeOn()) {
 			if (mp == null) {
@@ -234,27 +204,8 @@ public class Game extends Activity implements OnClickListener {
 		}
 	}
 
-	public void restartTime() {
-		timeInit(timeBar);
-	}
-
-	public void killTimeThread() {
-		timeThread.setRunning(false);
-		timeThread.interrupt();
-	}
-
 	// INTERFACE IMPLEMENTATION
 	ViewToGame viewToGame = new ViewToGame() {
-
-		@Override
-		public void restartTime() {
-			timeInit(timeBar);
-		}
-
-		@Override
-		public void killOldThread() {
-			killTimeThread();
-		}
 
 		@Override
 		public void resetView() {
@@ -284,17 +235,9 @@ public class Game extends Activity implements OnClickListener {
 	private LinearLayout defineLayout() {
 		LinearLayout layout = new LinearLayout(this);
 		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT));
+		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT));
 		return layout;
-	}
-
-	private ProgressBar defineProgressTimeBar() {
-		int progressBarStyle = android.R.attr.progressBarStyleHorizontal;
-		ProgressBar timeBar = new ProgressBar(this, null, progressBarStyle);
-		timeBar.setProgressDrawable(getResources().getDrawable(
-				R.drawable.time_bar_def));
-		return timeBar;
 	}
 
 	private Runnable showGameOverDialog = new Runnable() {
@@ -355,11 +298,9 @@ public class Game extends Activity implements OnClickListener {
 	}
 
 	protected void goToStart() {
-		killTimeThread();
 		view.killGameThread();
 		finish();
 	}
-
 	private View inflatePopupLayout() {
 		LinearLayout viewGroup = (LinearLayout) this.findViewById(R.id.popup);
 		LayoutInflater layoutInflater = (LayoutInflater) this
@@ -448,12 +389,7 @@ public class Game extends Activity implements OnClickListener {
 		layout.removeView(view);
 		view = new ViewGame(this, viewToGame);
 		layout.addView(view);
-
-		killTimeThread();
-		restartTime();
-
 		setContentView(layout);
-		view.setTimeThread(timeThread, timePerWord);
 	}
 
 	private void dismiss(Dialog dialog) {
@@ -543,6 +479,5 @@ public class Game extends Activity implements OnClickListener {
 			}
 			
 		});
-		finishDialog = dialog;
 	}
 }
