@@ -188,8 +188,9 @@ public class ViewGame extends SurfaceView {
 		boolean[] visits = new boolean[26];
 		Arrays.fill(visits, Boolean.FALSE);
 		drawablesWord = new ArrayList<Letter>();
-		for (char character : word.getString().toCharArray()) {
-			int asciiValue = character;
+		for (Character c : word.getString().toCharArray()) {
+			char character = Character.toLowerCase(c);
+			int asciiValue = character;   
 			Letter letter = new Letter();
 			if (visits[asciiValue - 97]) {
 				letter = createLetter(character);
