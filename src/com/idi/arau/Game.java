@@ -30,6 +30,7 @@ import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Game extends Activity implements OnClickListener {
 
@@ -536,20 +537,21 @@ public class Game extends Activity implements OnClickListener {
 			
 			@Override
 			public void onClick(View arg0) {
-				//Save data
 				EditText userInput = (EditText) dialog.findViewById(R.id.username);
 				CharSequence username = userInput.getText();
-								
-				saveMaxScore(username, score);
-				
-				// Go main activity
-				finish();
-				
+				if (username == "")
+					Toast.makeText(Game.this, "Please, define user", Toast.LENGTH_SHORT).show();
+				else {
+					saveMaxScore(username, score);
+
+					// Go main activity
+					finish();
+				}
 			}
 			
 			private void saveMaxScore(CharSequence username, int score) {
 				UserController userController = UserController.getInstance(Game.this);
-				userController.setMaxScore(username.toString(), score);
+				userController.setMaxScore(username.toString().trim(), score);
 			}
 			
 		});
