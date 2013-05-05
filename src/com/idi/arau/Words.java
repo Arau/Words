@@ -116,8 +116,8 @@ public class Words extends Activity {
 	}
 	
 	protected void goHelp() {
-		//Intent i = new Intent(this, Help.class);
-		//startActivity(i);		
+		Intent i = new Intent(this, HelpActivity.class);
+		startActivity(i);		
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,7 +142,6 @@ public class Words extends Activity {
 		}
 		return false;
 	}
-
 
 	private void play(int level) {
 		Intent i = new Intent(this, Game.class);

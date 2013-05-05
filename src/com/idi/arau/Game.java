@@ -149,13 +149,6 @@ public class Game extends Activity implements OnClickListener {
 		case DIALOG_FINISH_GAME:
 			showScore(dialog);
 			break;
-		case DIALOG_HELP:
-			dialog.setContentView(R.layout.help_dialog);
-			Button exit = (Button) dialog.findViewById(R.id.exitHelp);
-			exit.setOnClickListener(this);
-			dialog.setCancelable(false);
-			helpDialog = dialog;
-			break;
 
 		default:
 			dialog = null;
@@ -201,11 +194,6 @@ public class Game extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {		
-		case R.id.exitHelp:
-			// pause game
-			dismiss(helpDialog);
-			// play game
-			break;
 		default:			
 			finish();
 		}

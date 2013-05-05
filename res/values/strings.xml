@@ -21,13 +21,8 @@
     <string name="main_menu_label">Main menu</string>
     <string name="toggle_music">Play/Pause music</string>
     <string name="help">Help</string>
-    <string name="help_text">	Per solucionar la paraula cal clicar sobre les lletres que es mouen per
-	     formar la paraula que representa el la imatge central.
-	     Per exemple si la imatge central és "apple" cal clicar primer sobre la "a",
-	     després sobre la "p", etc. Fins arribar a completar la paraula completa. 
-	     Quan es finalitza correctament una paraula apareix una de nova, amb la seva
-	     imatge corresponent. 
-	     Si ja no queden més paraules, es pot veure un diàleg que així ho indica   </string>
+    <string name="help_text">El joc consisteix en generar la paraula que representa la imatge central, mitjançant les lletres que floten per la pantalla. Un cop es sel·lecciona una lletra aquesta passa a formar part de la paraula. Si la lletra sel·leccionada no és la correcta el joc indica quina és la paraula que s\'havia de completar. Aquest comportament es pot modificar mitjançant les preferències. És a dir, es pot escollir que apareixin les solucions o no. \n\nEs pot tornar a la pantalla principal mitjançant la icona principal del joc a la part superior esquerre de la pantalla. 
+        </string>
     <string name="exitHelp">Exit Help</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
