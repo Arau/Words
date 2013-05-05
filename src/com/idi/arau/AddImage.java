@@ -53,7 +53,7 @@ public class AddImage extends Activity {
 			@Override
 			public void onClick(View v) {
 				EditText nameField = (EditText) findViewById(R.id.nameImageToAdd);
-				name = nameField.getText().toString();				
+				name = nameField.getText().toString().toLowerCase();				
 																						
 				if (name == "" || level == -1 || scaledImg == null) {					
 					Toast.makeText(AddImage.this, "Empty fields", Toast.LENGTH_LONG).show();
