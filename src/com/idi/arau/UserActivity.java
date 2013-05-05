@@ -7,9 +7,7 @@ import java.util.Map;
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.database.MatrixCursor;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,44 +22,17 @@ public class UserActivity extends ListActivity {
 	
 	private ActionMode mActionMode;
 	static ArrayAdapter<String> adapter;
-	static Map<String, Integer> values;
+	static List<String> values;
 	static int position;
-	
-	
-	SimpleCursorAdapter mAdapter;
-
 	
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		defineActionBar();
-
-		final String[] matrix  = { "_id", "position", "name", "value" };
-		MatrixCursor  cursor = new MatrixCursor(matrix);
 		
-		final String[] columns = { "position", "name", "value" };
-		final int[]    layouts = { R.id.position, R.id.user, R.id.score};
-		
-		getListOfItems();
-		int index = 0;
-		for (String user : values.keySet()) {
-			cursor.addRow(new Object[] { index++, index, user, values.get(user) + " points"});
-		}
-		
-		
-
-		
-		SimpleCursorAdapter data = new SimpleCursorAdapter(this, R.layout.row_layout, cursor, columns, layouts);
-
-	    setListAdapter( data );
-		
-		
-
-//		
-//		
-//		values = getListOfItems();
-//		adapter = new ArrayAdapter<String>(this,
-//				R.layout.row_layout, R.id.user, values);
-//		setListAdapter(adapter);
+		values = getListOfItems();
+		adapter = new ArrayAdapter<String>(this,
+				R.layout.row_layout, R.id.user, values);
+		setListAdapter(adapter);
 		
 		this.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -107,9 +78,16 @@ public class UserActivity extends ListActivity {
 		bar.setTitle("Users");
 	}
 	
-	private void getListOfItems() {
+	private List<String> getListOfItems() {
 		UserController controller = UserController.getInstance(this);
-		values = controller.getRanking();
+		Map<String, Integer> userScore = controller.getRanking();
+		List<String> values = new ArrayList<String>();
+		int index = 1;
+		for (String key : userScore.keySet()) {
+			values.add(index + "  " + key + " \t\t\t\t" + userScore.get(key) + " points");
+			index++;
+		}
+		return values;
 	}
 	
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -151,12 +129,12 @@ public class UserActivity extends ListActivity {
 		}
 		
 		private void deleteUser() {			
-//			String[] item = values.get(position).split("\\s+");
-//			String user = item[1];
-//			UserController controller = UserController.getInstance(UserActivity.this);
-//			controller.deleteUser(user);
-//			values.remove(position);
-//			adapter.notifyDataSetChanged();
+			String[] item = values.get(position).split("\\s+");
+			String user = item[1];
+			UserController controller = UserController.getInstance(UserActivity.this);
+			controller.deleteUser(user);
+			values.remove(position);
+			adapter.notifyDataSetChanged();
 		}
 	};
 } 
