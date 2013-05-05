@@ -101,14 +101,12 @@ public class UserActivity extends ListActivity {
 			return true;
 		}
 
-		// Called each time the action mode is shown. Always called after onCreateActionMode, but
-		// may be called multiple times if the mode is invalidated.
+		// Called each time the action mode is shown. Always called after onCreateActionMode.
 		@Override
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 			return false; // Return false if nothing is done
 		}
 
-		// Called when the user selects a contextual menu item
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
@@ -122,7 +120,6 @@ public class UserActivity extends ListActivity {
 			}
 		}
 
-		// Called when the user exits the action mode
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mActionMode = null;
