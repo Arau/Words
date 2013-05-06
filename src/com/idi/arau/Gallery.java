@@ -39,7 +39,7 @@ public class Gallery extends Activity {
 	    
 	    gridview.setOnItemClickListener(new OnItemClickListener() {
 	        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-	            Toast.makeText(Gallery.this, "" + position, Toast.LENGTH_SHORT).show();
+	            Toast.makeText(Gallery.this, "Try with long click to delete", Toast.LENGTH_SHORT).show();
 	        }
 	    });
 	    
